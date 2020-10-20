@@ -1,7 +1,12 @@
 package be.heh.std.epm.domain;
 
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class HourlyClassification implements PaymentClassification {
 
@@ -18,12 +23,14 @@ public class HourlyClassification implements PaymentClassification {
     }
 
     @Override
-    public double getSalary() {
-        double temp = 0;
-        for(TimeCard timeCard : timeCards){
-            temp += (timeCard.getHours() > 8) ?
-                    (8*salary)+((timeCard.getHours()-8)*1.5*salary) : timeCard.getHours()*salary;
+    public double getPay(DateRange dateRange) {
+        double pay = 0;
+        for (TimeCard timeCard : timeCards) {
+            if (dateRange.isWithinRange(timeCard.getDate())) {
+                if (timeCard.getHours() > 8) pay += (8 * salary) + ((timeCard.getHours() - 8) * 1.5 * salary);
+                else pay += timeCard.getHours() * salary;
+            }
         }
-        return temp;
+        return pay;
     }
 }

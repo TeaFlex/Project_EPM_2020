@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class TimeCard {
 
-    private LocalDate date;
+    @Getter private LocalDate date;
     @Getter private double hours;
 
     public TimeCard(LocalDate date, double hours) {

@@ -9,7 +9,7 @@ public class SalariedClassification implements PaymentClassification {
     }
 
     @Override
-    public double getSalary() {
+    public double getPay(DateRange dateRange) {
         return this.salary;
     }
 }
