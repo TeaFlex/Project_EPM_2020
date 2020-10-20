@@ -1,13 +1,18 @@
 package be.heh.std.epm.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDate;
+
 public class Employee {
 
     private int empID;
     private String name;
     private String address;
-    private PaymentClassification paymentClassification;
-    private PaymentMethod paymentMethod;
-    private PaymentSchedule paymentSchedule;
+    @Getter @Setter private PaymentClassification paymentClassification;
+    @Getter @Setter private PaymentMethod paymentMethod;
+    @Getter @Setter private PaymentSchedule paymentSchedule;
 
     public Employee(int empID, String name, String address) {
         this.empID = empID;
@@ -20,27 +25,11 @@ public class Employee {
         return this.paymentClassification.getSalary(); // Attention ! C'est presque la bonne réponse.
     }
 
-    public PaymentClassification getPaymentClassification() {
-        return paymentClassification;
+    public void payDay(PayCheck payCheck) {
+
     }
 
-    public void setPaymentClassification(PaymentClassification paymentClassification) {
-        this.paymentClassification = paymentClassification;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public PaymentSchedule getPaymentSchedule() {
-        return paymentSchedule;
-    }
-
-    public void setPaymentSchedule(PaymentSchedule paymentSchedule) {
-        this.paymentSchedule = paymentSchedule;
+    public boolean isDatePay(LocalDate date) {
+        return false;
     }
 }
