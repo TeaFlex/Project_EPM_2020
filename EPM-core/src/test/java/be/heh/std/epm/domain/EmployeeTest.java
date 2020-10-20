@@ -74,7 +74,7 @@ public class EmployeeTest {
 
         LocalDate LastDayOfMonth = LocalDate.of(2019, 10, 31);
 
-        assertTrue(employee.isDatePay(LastDayOfMonth));
+        assertTrue(employee.isValidPayDate(LastDayOfMonth));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class EmployeeTest {
 
         LocalDate firstDayOfMonthWrong = LocalDate.of(2019, 10, 1);
 
-        assertFalse(employee.isDatePay(firstDayOfMonthWrong));
+        assertFalse(employee.isValidPayDate(firstDayOfMonthWrong));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class EmployeeTest {
 
         LocalDate fridayDate = LocalDate.of(2020, 10, 2);
 
-        assertTrue(employee.isDatePay(fridayDate));
+        assertTrue(employee.isValidPayDate(fridayDate));
     }
 
     @Test
@@ -107,6 +107,6 @@ public class EmployeeTest {
 
         LocalDate MondayDate = LocalDate.of(2020, 10, 5);
 
-        assertFalse(employee.isDatePay(MondayDate));
+        assertFalse(employee.isValidPayDate(MondayDate));
     }
 }

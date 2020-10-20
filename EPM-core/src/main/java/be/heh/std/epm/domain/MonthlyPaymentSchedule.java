@@ -1,13 +1,23 @@
 package be.heh.std.epm.domain;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 
 public class MonthlyPaymentSchedule implements PaymentSchedule {
+
     @Override
-    public GregorianCalendar getPayementDate() {
-        Calendar payday = new GregorianCalendar();
-        return null;//payday.getActualMaximum(Calendar.DAY_OF_MONTH);
+    public boolean isValidPayDate(LocalDate date) {
+        return date == getLastWorkingDayOfMonth(date);
+    }
+
+    private LocalDate getLastWorkingDayOfMonth(LocalDate date) {
+        LocalDate lastDay = date.withDayOfMonth(date.lengthOfMonth());
+        switch (lastDay.getDayOfWeek()) {
+            case SATURDAY:
+                return lastDay.minusDays(1);
+            case SUNDAY:
+                return lastDay.minusDays(2);
+            default:
+                return lastDay;
+        }
     }
 }

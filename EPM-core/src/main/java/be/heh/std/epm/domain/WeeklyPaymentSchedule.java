@@ -1,10 +1,12 @@
 package be.heh.std.epm.domain;
 
-import java.util.GregorianCalendar;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 
 public class WeeklyPaymentSchedule implements PaymentSchedule {
+
     @Override
-    public GregorianCalendar getPayementDate() {
-        return null;
+    public boolean isValidPayDate(LocalDate date) {
+        return date.getDayOfWeek() == DayOfWeek.FRIDAY;
     }
 }

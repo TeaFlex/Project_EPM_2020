@@ -1,7 +1,7 @@
 package be.heh.std.epm.domain;
 
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 
 public interface PaymentSchedule {
-    public GregorianCalendar getPayementDate();
+    public boolean isValidPayDate(LocalDate date);
 }

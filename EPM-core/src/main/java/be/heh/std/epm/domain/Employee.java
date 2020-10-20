@@ -24,7 +24,7 @@ public class Employee {
         payCheck.setSalary(paymentClassification.getSalary());
     }
 
-    public boolean isDatePay(LocalDate date) {
-        return false;
+    public boolean isValidPayDate(LocalDate date) {
+        return paymentSchedule.isValidPayDate(date);
     }
 }
