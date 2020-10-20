@@ -16,4 +16,9 @@ public class HourlyClassification implements PaymentClassification {
     public void addTimeCard(TimeCard timeCard) {
         timeCards.add(timeCard);
     }
+
+    @Override
+    public double getSalary() {
+        return salary;
+    }
 }

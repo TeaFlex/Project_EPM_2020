@@ -16,7 +16,8 @@ public class Employee {
     }
 
     public double calculatePay() {
-        return 0; // Attention ! Ce n'est pas la bonne réponse.
+
+        return this.paymentClassification.getSalary(); // Attention ! C'est presque la bonne réponse.
     }
 
     public PaymentClassification getPaymentClassification() {

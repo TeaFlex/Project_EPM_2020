@@ -40,8 +40,8 @@ public class EmployeeTest {
         employee.setPaymentMethod(new MailMethod("toto@gmail.com"));
         employee.setPaymentSchedule(new WeeklyPaymentSchedule());
 
-        Calendar date = new GregorianCalendar(2019, Calendar.NOVEMBER, 1);
-        Calendar nextDate = new GregorianCalendar(2019, Calendar.NOVEMBER, 2);
+        Calendar date = new GregorianCalendar(2020, Calendar.NOVEMBER, 1);
+        Calendar nextDate = new GregorianCalendar(2020, Calendar.NOVEMBER, 2);
         PaymentClassification classification = employee.getPaymentClassification();
         ((HourlyClassification) classification).addTimeCard(new TimeCard(date, 8.0));
         ((HourlyClassification) classification).addTimeCard(new TimeCard(nextDate, 10.0));
