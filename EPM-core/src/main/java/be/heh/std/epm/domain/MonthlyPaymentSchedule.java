@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class MonthlyPaymentySchedule implements PaymentSchedule {
+public class MonthlyPaymentSchedule implements PaymentSchedule {
     @Override
     public GregorianCalendar getPayementDate() {
         Calendar payday = new GregorianCalendar();
