@@ -8,7 +8,6 @@ public class MonthlyPaymentySchedule implements PaymentSchedule {
     @Override
     public GregorianCalendar getPayementDate() {
         Calendar payday = new GregorianCalendar();
-        payday.setTime(new Date());
-        return (GregorianCalendar) payday;
+        return null;//payday.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 }

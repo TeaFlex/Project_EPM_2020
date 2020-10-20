@@ -11,4 +11,8 @@ public class TimeCard {
         this.date = date;
         this.hours = hours;
     }
+
+    public double getHours(){
+        return this.hours;
+    }
 }

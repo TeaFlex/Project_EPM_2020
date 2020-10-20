@@ -19,6 +19,11 @@ public class HourlyClassification implements PaymentClassification {
 
     @Override
     public double getSalary() {
-        return salary;
+        double temp = 0;
+        for(TimeCard timeCard : timeCards){
+            temp += (timeCard.getHours() > 8) ?
+                    (8*salary)+((timeCard.getHours()-8)*1.5*salary) : timeCard.getHours()*salary;
+        }
+        return temp;
     }
 }
