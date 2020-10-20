@@ -57,7 +57,7 @@ public class EmployeeTest {
         employee.payDay(pc);
         double pay = pc.getSalary();
 
-        assertEquals(380.0, employee.calculatePay(), 0.01);
+        assertEquals(380.0, pay, 0.01);
 
         PaymentSchedule ps = employee.getPaymentSchedule();
         assertTrue(ps instanceof WeeklyPaymentSchedule);
