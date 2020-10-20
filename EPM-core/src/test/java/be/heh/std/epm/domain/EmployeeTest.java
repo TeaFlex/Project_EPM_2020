@@ -13,7 +13,7 @@ public class EmployeeTest {
     private PayCheck pc;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         employee = new Employee(100, "toto", "av maistriau");
         LocalDate payDate = LocalDate.of(2019, 10, 2);
         pc = new PayCheck(payDate);

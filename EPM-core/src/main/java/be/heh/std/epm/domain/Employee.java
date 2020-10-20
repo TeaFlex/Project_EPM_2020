@@ -20,13 +20,8 @@ public class Employee {
         this.address = address;
     }
 
-    public double calculatePay() {
-
-        return this.paymentClassification.getSalary(); // Attention ! C'est presque la bonne réponse.
-    }
-
     public void payDay(PayCheck payCheck) {
-
+        payCheck.setSalary(paymentClassification.getSalary());
     }
 
     public boolean isDatePay(LocalDate date) {
