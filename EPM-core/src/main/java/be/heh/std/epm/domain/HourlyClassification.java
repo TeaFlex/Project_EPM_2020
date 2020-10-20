@@ -1,12 +1,7 @@
 package be.heh.std.epm.domain;
 
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.temporal.ChronoField;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class HourlyClassification implements PaymentClassification {
 
