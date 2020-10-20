@@ -9,4 +9,9 @@ public class WeeklyPaymentSchedule implements PaymentSchedule {
     public boolean isValidPayDate(LocalDate date) {
         return date.getDayOfWeek() == DayOfWeek.FRIDAY;
     }
+
+    @Override
+    public DateRange getDateRange(LocalDate date) {
+        return new DateRange(date.minusDays(4), date);
+    }
 }

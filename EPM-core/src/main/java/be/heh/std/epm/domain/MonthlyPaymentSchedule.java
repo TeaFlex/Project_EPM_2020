@@ -9,6 +9,11 @@ public class MonthlyPaymentSchedule implements PaymentSchedule {
         return date == getLastWorkingDayOfMonth(date);
     }
 
+    @Override
+    public DateRange getDateRange(LocalDate date) {
+        return new DateRange(date.withDayOfMonth(1), date);
+    }
+
     private LocalDate getLastWorkingDayOfMonth(LocalDate date) {
         LocalDate lastDay = date.withDayOfMonth(date.lengthOfMonth());
         switch (lastDay.getDayOfWeek()) {
