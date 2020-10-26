@@ -1,16 +1,11 @@
 package be.heh.std.epm.domain;
 
-import lombok.Getter;
+import lombok.Value;
 
 import java.time.LocalDate;
 
+@Value
 public class TimeCard {
-
-    @Getter private LocalDate date;
-    @Getter private double hours;
-
-    public TimeCard(LocalDate date, double hours) {
-        this.date = date;
-        this.hours = hours;
-    }
+    LocalDate date;
+    double hours;
 }

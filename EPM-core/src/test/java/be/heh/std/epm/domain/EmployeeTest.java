@@ -27,7 +27,7 @@ public class EmployeeTest {
         employee.setPaymentSchedule(new MonthlyPaymentSchedule());
 
         employee.payDay(pc);
-        double pay = pc.getSalary();
+        double pay = pc.getPay();
         assertEquals(1000.0, pay, 0.01);
 
         PaymentSchedule ps = employee.getPaymentSchedule();
@@ -55,7 +55,7 @@ public class EmployeeTest {
         ((HourlyClassification) classification).addTimeCard(new TimeCard(dateOutside, 8.0));
 
         employee.payDay(pc);
-        double pay = pc.getSalary();
+        double pay = pc.getPay();
 
         assertEquals(380.0, pay, 0.01);
 
@@ -81,7 +81,7 @@ public class EmployeeTest {
         classification.addReceipt(new Receipt(dateOutside, 600));
 
         employee.payDay(pc);
-        double pay = pc.getSalary();
+        double pay = pc.getPay();
 
         assertEquals(1065.0, pay, 0.01);
     }

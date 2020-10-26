@@ -9,7 +9,7 @@ public class CommissionClassification extends SalariedClassification {
 
     public CommissionClassification(double salary, double commissionRate) {
         super(salary);
-        this.receipts = new ArrayList<Receipt>();
+        this.receipts = new ArrayList<>();
         this.commissionRate = commissionRate;
     }
 
