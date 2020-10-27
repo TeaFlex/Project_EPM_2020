@@ -6,7 +6,7 @@ public class MonthlyPaymentSchedule implements PaymentSchedule {
 
     @Override
     public boolean isValidPayDate(LocalDate date) {
-        return date == getLastWorkingDayOfMonth(date);
+        return date.equals(getLastWorkingDayOfMonth(date));
     }
 
     @Override

@@ -68,11 +68,11 @@ public class EmployeeTest {
 
     @Test
     public void createCommissionEmployee() {
-        employee.setPaymentClassification(new CommissionClassification(1000, 0.05));
-        employee.setPaymentSchedule(new MonthlyPaymentSchedule());
+        employee.setPaymentClassification(new CommissionClassification(500, 0.05));
+        employee.setPaymentSchedule(new BiweeklyPaymentSchedule());
 
         LocalDate date = LocalDate.of(2019, 10, 1);
-        LocalDate nextDate = LocalDate.of(2019, 10, 2);
+        LocalDate nextDate = LocalDate.of(2019, 9, 20);
         LocalDate dateOutside = LocalDate.of(2019, 9, 2);
 
         CommissionClassification classification = (CommissionClassification) employee.getPaymentClassification();
@@ -83,7 +83,7 @@ public class EmployeeTest {
         employee.payDay(pc);
         double pay = pc.getPay();
 
-        assertEquals(1065.0, pay, 0.01);
+        assertEquals(565.0, pay, 0.01);
     }
 
     @Test
@@ -128,5 +128,23 @@ public class EmployeeTest {
         LocalDate MondayDate = LocalDate.of(2020, 10, 5);
 
         assertFalse(employee.isValidPayDate(MondayDate));
+    }
+
+    @Test
+    public void biweeklyPaymentSchedule() {
+        employee.setPaymentSchedule(new BiweeklyPaymentSchedule());
+
+        LocalDate goodFridayDate = LocalDate.of(2020, 10, 9);
+
+        assertTrue(employee.isValidPayDate(goodFridayDate));
+    }
+
+    @Test
+    public void biweeklyPaymentScheduleWrong() {
+        employee.setPaymentSchedule(new BiweeklyPaymentSchedule());
+
+        LocalDate badFridayDate = LocalDate.of(2020, 10, 16);
+
+        assertFalse(employee.isValidPayDate(badFridayDate));
     }
 }
