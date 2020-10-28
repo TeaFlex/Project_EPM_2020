@@ -10,8 +10,16 @@ public class PersistenceAdapter implements OutPersistence {
     private ArrayList<Employee> database = new ArrayList();
 
     @Override
-    public void writeInDB(Employee emp) {
+    public void save(Employee emp) {
         database.add(emp);
+    }
+
+    @Override
+    public Employee getData(int id) {
+        for(Employee e : database){
+            if(e.getEmpID() == id) return e;
+        }
+        return null;
     }
 
     public ArrayList<Employee> getDatabase() {

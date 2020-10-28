@@ -1,7 +1,10 @@
 package be.heh.std.epm.domain;
 
+import lombok.Getter;
+
 public class MailMethod implements PaymentMethod {
 
+    @Getter
     private String email;
 
     public MailMethod(String email) {

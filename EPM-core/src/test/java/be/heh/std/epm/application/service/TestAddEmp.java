@@ -1,31 +1,38 @@
 package be.heh.std.epm.application.service;
 
 import be.heh.std.epm.application.adapter.PersistenceAdapter;
-import be.heh.std.epm.domain.Employee;
+import be.heh.std.epm.application.data.DataEmployee;
+import be.heh.std.epm.domain.*;
 import org.junit.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TestAddEmp {
 
-    private AddEmp addition;
     private PersistenceAdapter db;
+    private DataEmployee emp;
 
     @Before
     public void setUp(){
         db = new PersistenceAdapter();
+        PaymentClassification paycl = new CommissionClassification(1000, 0.2);
+        PaymentMethod paymeth = new MailMethod("vincent.larcin@std.heh.be");
+        WeeklyPaymentSchedule paysch = new WeeklyPaymentSchedule();
+        emp = new DataEmployee(1, "Larcin Vincent", "Frameries", paycl, paymeth, paysch);
     }
 
     @Test
     public void addingEmps(){
-        addition = new AddSalariedEmp(1, "Larcin Vincent", "Frameries", 1500, db);
-        addition = new AddCommissionEmp(2, "Jeuniaux Nicolas", "Quévy-le-petit", 1400, 0.5, db);
-        addition = new AddHourlyEmp(3, "Vitali Luca", "Quévy-le-grand", 20, db);
 
-        for (Employee e : db.getDatabase()) {
-            System.out.println(e.toString());
-        }
+        OperationEmp.addEmp(emp, db);
 
-        assertEquals(3, db.getDatabase().size());
+        assertEquals(1, db.getDatabase().size());
+        Employee dbemp = db.getData(emp.getId());
+        assertTrue(dbemp instanceof Employee);
+        assertTrue(dbemp.getPaymentClassification() instanceof CommissionClassification);
+        assertTrue(dbemp.getPaymentMethod() instanceof MailMethod);
+        assertTrue(dbemp.getPaymentSchedule() instanceof WeeklyPaymentSchedule);
+        assertTrue(dbemp.getName() == "Larcin Vincent");
+        assertTrue(((MailMethod) dbemp.getPaymentMethod()).getEmail() == "vincent.larcin@std.heh.be");
     }
 }
