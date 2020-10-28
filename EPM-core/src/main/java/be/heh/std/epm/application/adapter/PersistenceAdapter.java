@@ -11,12 +11,16 @@ public class PersistenceAdapter implements OutPersistence {
 
     @Override
     public void save(Employee emp) {
-        database.add(emp);
+        boolean valid = true;
+        for(Employee e : database) {
+            if(emp.getEmpID() == e.getEmpID()) valid = false;
+        }
+        if(valid) database.add(emp);
     }
 
     @Override
     public Employee getData(int id) {
-        for(Employee e : database){
+        for(Employee e : database) {
             if(e.getEmpID() == id) return e;
         }
         return null;
