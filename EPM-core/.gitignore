@@ -127,4 +127,5 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/intellij,gradle
 
 jarRepositories.xml
+
 discord.xml
