@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class PersistenceAdapter implements OutPersistence {
 
+    //"database" for tests
     private ArrayList<Employee> database = new ArrayList();
 
     @Override
@@ -16,6 +17,16 @@ public class PersistenceAdapter implements OutPersistence {
             if(emp.getEmpID() == e.getEmpID()) valid = false;
         }
         if(valid) database.add(emp);
+    }
+
+    @Override
+    public void delete(int id) {
+        for(Employee e : database) {
+            if (e.getEmpID() == id) {
+                database.remove(e);
+                break;
+            }
+        }
     }
 
     @Override

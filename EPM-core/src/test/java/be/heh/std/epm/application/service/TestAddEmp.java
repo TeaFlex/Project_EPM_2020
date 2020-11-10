@@ -22,7 +22,7 @@ public class TestAddEmp {
     }
 
     @Test
-    public void addingEmps(){
+    public void addingEmps() {
 
         OperationEmp.addEmp(emp, db);
 
@@ -34,5 +34,15 @@ public class TestAddEmp {
         assertTrue(dbemp.getPaymentSchedule() instanceof WeeklyPaymentSchedule);
         assertTrue(dbemp.getName() == "Larcin Vincent");
         assertTrue(((MailMethod) dbemp.getPaymentMethod()).getEmail() == "vincent.larcin@std.heh.be");
+    }
+
+    @Test
+    public void deletingEmps() {
+
+        OperationEmp.addEmp(emp, db);
+        OperationEmp.delEmp(emp.getId(), db);
+
+        assertEquals(0, db.getDatabase().size());
+        assertEquals(null, db.getData(emp.getId()));
     }
 }
