@@ -8,16 +8,16 @@ paths:
   /employees/add:
     post:
       requestBody:
-        description: "[REQ] Ajout d'un employé"
+        description: "[REQ] Add employee"
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/EmployeeSalaried'
       responses:
         '201':
-          description: "[201] Ajout réussi"
+          description: "[201] AddEmployee Success"
         '400':
-          description: "[400] Données invalides"
+          description: "[400] Invalid data"
           content:
             application/json:
               schema:
@@ -26,7 +26,7 @@ paths:
   /employees/remove:
     post:
       requestBody:
-        description: "[REQ] Suppression d'un employé"
+        description: "[REQ] Remove employee"
         content:
           text/plain:
             schema:
@@ -34,9 +34,9 @@ paths:
               example: 123
       responses:
         '200':
-          description: "[200] Suppression réussie"
+          description: "[200] RemoveEmployee Success"
         '400':
-          description: "[400] Employé inexistant"
+          description: "[400] RemoveEmployee Error"
           content:
             application/json:
               schema:
@@ -45,21 +45,32 @@ paths:
   /timecard/add:
     post:
       requestBody:
-        description: "[REQ] Envoi de timecard"
+        description: "[REQ] Timecard Post"
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PostTimecard'
       responses:
         '200':
-          description: "[200] Ajout de la timecard réussi"
+          description: "[200] TimecardPost Success"
         '400':
-          description: "[400] Erreur de Timecard"
+          description: "[400] TimecardPost Error"
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TimecardError'
-      
+                
+  /salesreceipt/add:
+    post:
+      requestBody:
+        description: "[REQ] SalesReceipt Post"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostSalesReceipt'
+      responses:
+        '200':
+          description: "[200] SalesReceiptPost Success"
 
 components:
   schemas:
@@ -128,3 +139,19 @@ components:
           items:
             type: string
             example: "Cette timecard est incorrecte"
+            
+    PostSalesReceipt:
+      type: object
+      properties:
+        empId:
+          type: integer
+          example: 123
+        date:
+          type: string
+          example: "2020-10-29"
+        hours:
+          type: string
+          example: "6h"
+        amount:
+          type: integer
+          example: 1300
