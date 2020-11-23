@@ -1,3 +1,7 @@
 rootProject.name = 'EPM_PROJECT_2020'
 include 'EPM-core'
+include 'adapters:EPM-persistence'
+findProject(':adapters:EPM-persistence')?.name = 'EPM-persistence'
+include 'adapters:EPM-web'
+findProject(':adapters:EPM-web')?.name = 'EPM-web'
 

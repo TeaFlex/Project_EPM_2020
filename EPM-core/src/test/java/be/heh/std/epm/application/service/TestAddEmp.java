@@ -27,7 +27,7 @@ public class TestAddEmp {
         OperationEmp.addEmp(emp, db);
 
         assertEquals(1, db.getDatabase().size());
-        Employee dbemp = db.getData(emp.getId());
+        DataEmployee dbemp = db.getData(emp.getId());
         assertTrue(dbemp.getPaymentClassification() instanceof CommissionClassification);
         assertTrue(dbemp.getPaymentMethod() instanceof MailMethod);
         assertTrue(dbemp.getPaymentSchedule() instanceof WeeklyPaymentSchedule);

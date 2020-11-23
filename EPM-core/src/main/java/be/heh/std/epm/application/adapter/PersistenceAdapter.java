@@ -1,28 +1,28 @@
 package be.heh.std.epm.application.adapter;
 
-import be.heh.std.epm.application.port.OutPersistence;
-import be.heh.std.epm.domain.Employee;
+import be.heh.std.epm.application.data.DataEmployee;
+import be.heh.std.epm.application.port.out.OutPersistence;
 
 import java.util.ArrayList;
 
 public class PersistenceAdapter implements OutPersistence {
 
     //"database" for tests
-    private ArrayList<Employee> database = new ArrayList();
+    private ArrayList<DataEmployee> database = new ArrayList();
 
     @Override
-    public void save(Employee emp) {
+    public void save(DataEmployee emp) {
         boolean valid = true;
-        for(Employee e : database) {
-            if(emp.getEmpID() == e.getEmpID()) valid = false;
+        for(DataEmployee e : database) {
+            if(emp.getId() == e.getId()) valid = false;
         }
         if(valid) database.add(emp);
     }
 
     @Override
     public void delete(int id) {
-        for(Employee e : database) {
-            if (e.getEmpID() == id) {
+        for(DataEmployee e : database) {
+            if (e.getId() == id) {
                 database.remove(e);
                 break;
             }
@@ -30,14 +30,14 @@ public class PersistenceAdapter implements OutPersistence {
     }
 
     @Override
-    public Employee getData(int id) {
-        for(Employee e : database) {
-            if(e.getEmpID() == id) return e;
+    public DataEmployee getData(int id) {
+        for(DataEmployee e : database) {
+            if(e.getId() == id) return e;
         }
         return null;
     }
 
-    public ArrayList<Employee> getDatabase() {
+    public ArrayList<DataEmployee> getDatabase() {
         return this.database;
     }
 }

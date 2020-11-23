@@ -1,7 +1,7 @@
 package be.heh.std.epm.application.service;
 
 import be.heh.std.epm.application.data.DataEmployee;
-import be.heh.std.epm.application.port.OutPersistence;
+import be.heh.std.epm.application.port.out.OutPersistence;
 import be.heh.std.epm.domain.Employee;
 
 public class OperationEmp {
@@ -12,7 +12,7 @@ public class OperationEmp {
         finalEmp.setPaymentSchedule(e.getPaymentSchedule());
         finalEmp.setPaymentClassification(e.getPaymentClassification());
         finalEmp.setPaymentMethod(e.getPaymentMethod());
-        out.save(finalEmp);
+        out.save(e);
     }
 
     public static void delEmp(int id, OutPersistence out) {
