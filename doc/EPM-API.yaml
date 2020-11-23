@@ -1,0 +1,99 @@
+openapi: 3.0.1
+info:
+  description: Employee Management API
+  version: 1.0.0-oas3
+  title: EPM-API
+  
+paths:
+  /employees/add:
+    post:
+      requestBody:
+        description: "[REQ] Ajout d'un employé"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeSalaried'
+      responses:
+        '201':
+          description: '[201] Ajout réussi'
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Ajout de Jean-Claude réussi"
+        '400':
+          description: '[400] Données invalides'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidData'
+                
+  /employees/remove:
+    post:
+      requestBody:
+        description: "[REQ] Suppression d'un employé"
+        content:
+          text/plain:
+            schema:
+              type: integer
+              example: 123
+      responses:
+        '200':
+          description: "[200] Suppression réussie"
+          content:
+            text/plain:
+              schema:
+                type: integer
+                example: 123
+        '400':
+          description: "[400] Employé inexistant"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingEmployee'
+                
+components:
+  schemas:
+    EmployeeSalaried:
+      type: object
+      properties:
+        empId:
+          type: integer
+          example: 123
+        name:
+          type: string
+          example: "toto"
+        address:
+          type: string
+          example: "rue de Mons"
+        mail:
+          type: string
+          example: "toto@heh.be"
+        monthlySalary:
+          type: number
+          example: 1500
+          
+    InvalidData:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: "2020-10-29T07:44:23.354+00:00"
+        status:
+          type: integer
+          example: 400
+        errors:
+          type: array
+          items: 
+            type: string
+            example: "Ceci est un message d'erreur"
+          
+    MissingEmployee:
+      type: object
+      properties:
+        empId:
+          type: integer
+          example: 123
+        error:
+          type: string
+          example: "Cet employé n'existe pas"
