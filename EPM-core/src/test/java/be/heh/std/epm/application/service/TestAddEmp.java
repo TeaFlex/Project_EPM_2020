@@ -28,12 +28,11 @@ public class TestAddEmp {
 
         assertEquals(1, db.getDatabase().size());
         Employee dbemp = db.getData(emp.getId());
-        assertTrue(dbemp instanceof Employee);
         assertTrue(dbemp.getPaymentClassification() instanceof CommissionClassification);
         assertTrue(dbemp.getPaymentMethod() instanceof MailMethod);
         assertTrue(dbemp.getPaymentSchedule() instanceof WeeklyPaymentSchedule);
-        assertTrue(dbemp.getName() == "Larcin Vincent");
-        assertTrue(((MailMethod) dbemp.getPaymentMethod()).getEmail() == "vincent.larcin@std.heh.be");
+        assertSame("Larcin Vincent", dbemp.getName());
+        assertSame("vincent.larcin@std.heh.be", ((MailMethod) dbemp.getPaymentMethod()).getEmail());
     }
 
     @Test
@@ -43,6 +42,6 @@ public class TestAddEmp {
         OperationEmp.delEmp(emp.getId(), db);
 
         assertEquals(0, db.getDatabase().size());
-        assertEquals(null, db.getData(emp.getId()));
+        assertNull(db.getData(emp.getId()));
     }
 }
