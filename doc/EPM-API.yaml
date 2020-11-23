@@ -44,7 +44,7 @@ paths:
                 $ref: '#/components/schemas/MissingEmployee'
                
   /employees/update_{id}:
-    post:
+    put:
       summary: "Update an Employee by ID"
       parameters:
         - in: path
@@ -97,6 +97,8 @@ paths:
       responses:
         '200':
           description: "[200] SalesReceiptPost Success"
+      
+      
 
 components:
   schemas:
