@@ -5,7 +5,7 @@ info:
   title: EPM-API
   
 paths:
-  /employees/add:
+  /employees:
     post:
       requestBody:
         description: "[REQ] Add employee"
@@ -23,7 +23,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/InvalidData'
                 
-  /employees/remove_{id}:
+  /employees/{id}:
     delete:
       summary: "Remove an Employee by ID"
       parameters:
@@ -42,8 +42,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MissingEmployee'
-               
-  /employees/update_{id}:
     put:
       summary: "Update an Employee by ID"
       parameters:
@@ -68,7 +66,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UpdateError'
                 
-  /timecard/add:
+  /timecard:
     post:
       requestBody:
         description: "[REQ] Timecard Post"
@@ -86,7 +84,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TimecardError'
                 
-  /salesreceipt/add:
+  /salesreceipt:
     post:
       requestBody:
         description: "[REQ] SalesReceipt Post"
@@ -208,3 +206,6 @@ components:
           items:
             type: string
             example: "L'ID n'est pas correct"
+            
+servers:
+  - url: 'https://virtserver.swaggerhub.com/Iucapad/EPM-API/1.0.0'
