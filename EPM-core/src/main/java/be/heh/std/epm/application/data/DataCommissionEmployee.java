@@ -3,11 +3,24 @@ package be.heh.std.epm.application.data;
 
 import be.heh.std.epm.domain.BiweeklyPaymentSchedule;
 import be.heh.std.epm.domain.CommissionClassification;
+import be.heh.std.epm.domain.Employee;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
 
 public class DataCommissionEmployee extends DataEmployee {
-    public DataCommissionEmployee(int id, String name, String address, double salary, double comRate) {
-        super(id, name, address);
-        this.paymentClassification = new CommissionClassification(salary, comRate);
-        this.paymentSchedule = new BiweeklyPaymentSchedule();
+
+    @Getter @Setter @NotNull
+    private int salary;
+    @Getter @Setter @NotNull
+    private float commissionRate;
+
+    @Override
+    public Employee toEmployee() {
+        Employee employee = super.toEmployee();
+        employee.setPaymentSchedule(new BiweeklyPaymentSchedule());
+        employee.setPaymentClassification(new CommissionClassification(salary, commissionRate));
+        return employee;
     }
 }

@@ -1,12 +1,23 @@
 package be.heh.std.epm.application.data;
 
+import be.heh.std.epm.domain.Employee;
 import be.heh.std.epm.domain.MonthlyPaymentSchedule;
 import be.heh.std.epm.domain.SalariedClassification;
+import lombok.Getter;
+import lombok.Setter;
 
-public class DataSalariedEmployee extends DataEmployee{
-    public DataSalariedEmployee(int id, String name, String address, double salary) {
-        super(id, name, address);
-        this.paymentClassification = new SalariedClassification(salary);
-        this.paymentSchedule = new MonthlyPaymentSchedule();
+import javax.validation.constraints.NotNull;
+
+public class DataSalariedEmployee extends DataEmployee {
+
+    @Getter @Setter @NotNull
+    int salary;
+
+    @Override
+    public Employee toEmployee() {
+        Employee employee = super.toEmployee();
+        employee.setPaymentSchedule(new MonthlyPaymentSchedule());
+        employee.setPaymentClassification(new SalariedClassification(salary));
+        return employee;
     }
 }
