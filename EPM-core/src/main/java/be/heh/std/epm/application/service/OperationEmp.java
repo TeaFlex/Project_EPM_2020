@@ -3,19 +3,42 @@ package be.heh.std.epm.application.service;
 import be.heh.std.epm.application.data.DataEmployee;
 import be.heh.std.epm.application.port.out.OutPersistence;
 import be.heh.std.epm.domain.Employee;
+import be.heh.std.epm.domain.HourlyClassification;
+import be.heh.std.epm.domain.TimeCard;
+
+import java.lang.reflect.Constructor;
+import java.time.LocalDate;
 
 public class OperationEmp {
 
-    public static void addEmp(DataEmployee e, OutPersistence out){
+    private  OutPersistence out;
 
-        Employee finalEmp = new Employee(e.getId(), e.getName(), e.getAddress());
-        finalEmp.setPaymentSchedule(e.getPaymentSchedule());
-        finalEmp.setPaymentClassification(e.getPaymentClassification());
-        finalEmp.setPaymentMethod(e.getPaymentMethod());
-        out.save(e);
+    public OperationEmp (OutPersistence o) {
+        this.out = o;
     }
 
-    public static void delEmp(int id, OutPersistence out) {
-        out.delete(id);
+    public void addEmployee(DataEmployee e) {
+        Employee finalemp = new Employee(e.getId(), e.getName(), e.getAddress());
+        finalemp.setPaymentSchedule(e.getPaymentSchedule());
+        finalemp.setPaymentClassification(e.getPaymentClassification());
+        finalemp.setPaymentMethod(e.getPaymentMethod());
+        this.out.save(finalemp);
     }
+
+    public void deleteEmployee(int id) {
+        this.out.delete(id);
+    }
+
+    public void postTimeCard(int id, LocalDate date, double hours) {
+        Employee e = this.out.getData(id);
+        if(e.getPaymentClassification() instanceof HourlyClassification){
+
+            ((HourlyClassification) e.getPaymentClassification()).addTimeCard(new TimeCard(date, hours));
+            this.out.replace(e);
+        }
+        else {
+            //throw error
+        }
+    }
+    
 }

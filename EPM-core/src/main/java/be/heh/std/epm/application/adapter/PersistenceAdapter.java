@@ -2,42 +2,37 @@ package be.heh.std.epm.application.adapter;
 
 import be.heh.std.epm.application.data.DataEmployee;
 import be.heh.std.epm.application.port.out.OutPersistence;
+import be.heh.std.epm.domain.Employee;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PersistenceAdapter implements OutPersistence {
 
     //"database" for tests
-    private ArrayList<DataEmployee> database = new ArrayList();
+    private HashMap<Integer, Employee> database = new HashMap<>();
 
     @Override
-    public void save(DataEmployee emp) {
-        boolean valid = true;
-        for(DataEmployee e : database) {
-            if(emp.getId() == e.getId()) valid = false;
-        }
-        if(valid) database.add(emp);
+    public void save(Employee emp) {
+        database.putIfAbsent(emp.getEmpID(), emp);
     }
 
     @Override
     public void delete(int id) {
-        for(DataEmployee e : database) {
-            if (e.getId() == id) {
-                database.remove(e);
-                break;
-            }
-        }
+        database.remove(id);
     }
 
     @Override
-    public DataEmployee getData(int id) {
-        for(DataEmployee e : database) {
-            if(e.getId() == id) return e;
-        }
-        return null;
+    public Employee getData(int id) {
+        return (Employee) database.get(id);
     }
 
-    public ArrayList<DataEmployee> getDatabase() {
+    @Override
+    public void replace(Employee e) {
+        this.database.replace(e.getEmpID(), e);
+    }
+
+    public HashMap<Integer, Employee> getDatabase() {
         return this.database;
     }
 }
