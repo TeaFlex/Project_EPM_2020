@@ -14,7 +14,7 @@ public class DataHourlyEmployee extends DataEmployee {
     private float salary;
 
     @Override
-    public Employee toEmployee() {
+    public Employee toEmployee() throws Exception {
         Employee employee = super.toEmployee();
         employee.setPaymentSchedule(new WeeklyPaymentSchedule());
         employee.setPaymentClassification(new HourlyClassification(salary));

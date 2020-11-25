@@ -14,7 +14,7 @@ public class TestPersistence implements OutPersistence {
 
     @Override
     public void save(Employee emp) throws Exception {
-        if(database.containsValue(emp))
+        if(database.containsKey(emp.getEmpID()))
             throw new Exception("This employee already exists.");
         database.put(emp.getEmpID(), emp);
     }

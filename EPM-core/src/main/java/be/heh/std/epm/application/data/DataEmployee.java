@@ -26,14 +26,14 @@ public abstract class DataEmployee {
     @NotEmpty
     private String iban;
 
-    public Employee toEmployee() {
+    public Employee toEmployee() throws Exception {
         Employee employee = new Employee(id, name, address);
         if (!Objects.isNull(email)) {
             employee.setPaymentMethod(new MailMethod(email));
         } else if (!Objects.isNull(bank) && !Objects.isNull(iban)) {
             employee.setPaymentMethod(new DirectDepositMethod(bank, iban));
         } else {
-            // TODO: Exception ?!!
+            throw new Exception("Informations such as the email or the iban with the assiciated bank are not given.");
         }
         return employee;
     }

@@ -17,7 +17,7 @@ public class DataCommissionEmployee extends DataEmployee {
     private float commissionRate;
 
     @Override
-    public Employee toEmployee() {
+    public Employee toEmployee() throws Exception {
         Employee employee = super.toEmployee();
         employee.setPaymentSchedule(new BiweeklyPaymentSchedule());
         employee.setPaymentClassification(new CommissionClassification(salary, commissionRate));

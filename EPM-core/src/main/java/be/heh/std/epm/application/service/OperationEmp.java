@@ -17,23 +17,12 @@ public class OperationEmp implements InUseCase {
 
     @Override
     public void addEmployee(DataEmployee e) throws Exception {
-        try {
-            Employee finalEmployee = e.toEmployee();
-            this.out.save(finalEmployee);
-        }
-        catch (Exception err){
-            throw new Exception(err.getMessage());
-        }
+        this.out.save(e.toEmployee());
     }
 
     @Override
     public void deleteEmployee(int id) throws Exception {
-        try{
-            this.out.delete(id);
-        }
-        catch(Exception err){
-            throw new Exception(err.getMessage());
-        }
+        this.out.delete(id);
     }
 
     @Override
