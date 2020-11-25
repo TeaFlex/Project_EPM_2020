@@ -73,7 +73,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PostTimecard'
+              $ref: '#/components/schemas/BodyTimecard'
       responses:
         '200':
           description: "[200] TimecardPost Success"
@@ -91,7 +91,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PostSalesReceipt'
+              $ref: '#/components/schemas/BodySalesreceipt'
       responses:
         '200':
           description: "[200] SalesReceiptPost Success"
@@ -110,8 +110,12 @@ components:
           $ref: '#/components/schemas/EmployeeObject'
     EmployeeObject:
       type: object
+      required:
+        - id
+        - name
+        - address
       properties:
-        empId:
+        id:
           type: integer
           example: 123
         name:
@@ -120,12 +124,21 @@ components:
         address:
           type: string
           example: "12, rue de Wasmes"
-        mail:
+        bankname:
+          type: string
+          example: "Belfius"
+        account:
+          type: string
+          example: "BE24 1234 1234 1234"
+        email:
           type: string
           example: "jc@employee.be"
-        monthlySalary:
-          type: number
+        salary:
+          type: integer
           example: 1500
+        rate:
+          type: integer
+          example: 10
           
     InvalidData:
       type: object
@@ -149,7 +162,17 @@ components:
           type: string
           example: "Employé inexistant"
           
-    PostTimecard:
+          
+    BodyTimecard:
+      type: object
+      properties: 
+        employeeID:
+          type: integer
+          example: 123
+        timecard:
+          $ref: '#/components/schemas/TimecardObject'
+          
+    TimecardObject:
       type: object
       properties:
         empId:
@@ -174,7 +197,15 @@ components:
             type: string
             example: "Cette timecard est incorrecte"
             
-    PostSalesReceipt:
+    BodySalesreceipt:
+      type: object
+      properties:
+        employeeID:
+          type: integer
+        salesreceipt:
+          $ref: '#/components/schemas/SalesreceiptObject'
+            
+    SalesreceiptObject:
       type: object
       properties:
         empId:
