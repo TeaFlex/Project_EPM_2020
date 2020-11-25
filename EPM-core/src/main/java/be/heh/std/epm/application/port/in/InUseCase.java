@@ -9,4 +9,5 @@ public interface InUseCase {
     void deleteEmployee(int id) throws Exception;
     void postTimeCard(int id, LocalDate date, double hours) throws Exception;
     void postSaleReceipt(int id, LocalDate date, double price) throws Exception;
+    //void changeEmployeeDetails(int id, String action, )
 }

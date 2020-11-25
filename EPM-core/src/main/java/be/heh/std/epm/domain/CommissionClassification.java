@@ -1,9 +1,12 @@
 package be.heh.std.epm.domain;
 
+import lombok.Getter;
+
 import java.util.*;
 
 public class CommissionClassification extends SalariedClassification {
 
+    @Getter
     private List<Receipt>receipts;
     private double commissionRate;
 
