@@ -12,7 +12,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EmployeeSalaried'
+              $ref: '#/components/schemas/BodyEmployee'
       responses:
         '201':
           description: "[201] AddEmployee Success"
@@ -100,7 +100,15 @@ paths:
 
 components:
   schemas:
-    EmployeeSalaried:
+    BodyEmployee:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "monthly"
+        employee:
+          $ref: '#/components/schemas/EmployeeObject'
+    EmployeeObject:
       type: object
       properties:
         empId:
@@ -111,10 +119,10 @@ components:
           example: "Jean-Claude"
         address:
           type: string
-          example: "Rue de Mons"
+          example: "12, rue de Wasmes"
         mail:
           type: string
-          example: "jc@heh.be"
+          example: "jc@employee.be"
         monthlySalary:
           type: number
           example: 1500
