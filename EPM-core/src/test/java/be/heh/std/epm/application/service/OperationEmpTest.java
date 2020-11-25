@@ -9,6 +9,7 @@ import be.heh.std.epm.domain.*;
 import org.junit.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -17,18 +18,20 @@ public class OperationEmpTest {
     private TestPersistence db;
     private DataEmployee emp;
     private OperationEmp op;
+    private LocalDate d;
 
     public void setInfos(DataEmployee e) {
         e.setId(1);
-        e.setName("Robert Pâtée");
+        e.setName("Robert Birquot");
         e.setAddress("Mons");
-        e.setEmail("robert.patee@gmail.com");
+        e.setEmail("robert.birquot@gmail.com");
     }
 
     @Before
     public void setUp(){
         db = new TestPersistence();
         op = new OperationEmp(db);
+        d = LocalDate.of(2000,1,1);
     }
 
     @Test
@@ -44,12 +47,13 @@ public class OperationEmpTest {
         assertTrue(dbemp.getPaymentClassification() instanceof HourlyClassification);
         assertTrue(dbemp.getPaymentMethod() instanceof MailMethod);
         assertTrue(dbemp.getPaymentSchedule() instanceof WeeklyPaymentSchedule);
-        assertSame("Robert Pâtée", dbemp.getName());
-        assertSame("robert.patee@gmail.com", ((MailMethod) dbemp.getPaymentMethod()).getEmail());
+        assertSame("Robert Birquot", dbemp.getName());
+        assertSame("robert.birquot@gmail.com", ((MailMethod) dbemp.getPaymentMethod()).getEmail());
     }
 
     @Test(expected = Exception.class)
     public void badAdd() throws Exception {
+
         emp = new DataHourlyEmployee();
         setInfos(emp);
 
@@ -78,10 +82,12 @@ public class OperationEmpTest {
 
         emp = new DataHourlyEmployee();
         setInfos(emp);
+        double h = 25;
 
         op.addEmployee(emp);
-        op.postTimeCard(emp.getId(), LocalDate.of(2000,12,23), 25);
-        TimeCard t = new TimeCard(LocalDate.of(2000, 12, 23),25);
+        op.postTimeCard(emp.getId(), d, h);
+        TimeCard t = new TimeCard(d, h);
+
         assertEquals(1, ((HourlyClassification)db.getData(emp.getId()).getPaymentClassification())
                 .getTimeCards().size());
         assertNotNull(((HourlyClassification) db.getData(emp.getId()).
@@ -99,9 +105,49 @@ public class OperationEmpTest {
         op.postTimeCard(emp.getId(), LocalDate.now(), 44);
     }
 
+    @Test(expected = Exception.class)
+    public void existantPostTimeCard() throws Exception {
+
+        emp = new DataCommissionEmployee();
+        setInfos(emp);
+
+        op.postTimeCard(emp.getId(), d, 44);
+        op.postTimeCard(emp.getId(), d, 44);
+    }
+
     @Test
-    public void postReceipt() {
-        /*emp = new DataCommissionEmployee(78, "Constentin Druart", "Mons", 1600, 0.2);
-        emp.setPaymentMethod(new MailMethod("luca.vitali@std.heh.be"));*/
+    public void postReceipt() throws Exception{
+        emp = new DataCommissionEmployee();
+        setInfos(emp);
+        double p = 120;
+
+        op.addEmployee(emp);
+        op.postSaleReceipt(emp.getId(), d, p);
+
+        Employee res = db.getData(emp.getId());
+        Receipt r = new Receipt(d, p);
+
+        assertEquals(1,((CommissionClassification)res.getPaymentClassification()).getReceipts().size());
+        assertNotNull(((CommissionClassification)res.getPaymentClassification()).getReceipts().get(0));
+        assertEquals(r, ((CommissionClassification)res.getPaymentClassification()).getReceipts().get(0));
+    }
+
+    @Test(expected = Exception.class)
+    public void badDPostReceipt() throws Exception {
+
+        emp = new DataSalariedEmployee();
+        setInfos(emp);
+
+        op.postSaleReceipt(emp.getId(), LocalDate.now(), 250);
+    }
+
+    @Test(expected = Exception.class)
+    public void existantReceipt() throws Exception {
+
+        emp = new DataCommissionEmployee();
+        setInfos(emp);
+
+        op.postSaleReceipt(emp.getId(), d, 204);
+        op.postSaleReceipt(emp.getId(), d, 204);
     }
 }

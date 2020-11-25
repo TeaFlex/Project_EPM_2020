@@ -29,12 +29,11 @@ public class OperationEmp implements InUseCase {
     public void postTimeCard(int id, LocalDate date, double hours) throws Exception {
         Employee e = this.out.getData(id);
         if(e.getPaymentClassification() instanceof HourlyClassification){
-
             ((HourlyClassification) e.getPaymentClassification()).addTimeCard(new TimeCard(date, hours));
             this.out.replace(e);
-        }
-        else {
-            throw new Exception("The chosen employee is not from the classification HOURLY.");
+        } else {
+            throw new Exception(String.format("The chosen employee is from %s.",
+                    e.getPaymentClassification().getClass()));
         }
     }
 
@@ -44,9 +43,9 @@ public class OperationEmp implements InUseCase {
         if(e.getPaymentClassification() instanceof CommissionClassification) {
             ((CommissionClassification) e.getPaymentClassification()).addReceipt(new Receipt(date, price));
             this.out.replace(e);
-        }
-        else{
-            throw new Exception("The chosen employee is not from the classification COMMISSION.");
+        } else {
+            throw new Exception(String.format("The chosen employee is from %s.",
+                    e.getPaymentClassification().getClass()));
         }
     }
 
