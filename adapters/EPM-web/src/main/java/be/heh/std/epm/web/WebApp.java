@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class Aaaaa {
+public class WebApp {
     public static void main(String[] args) {
-        SpringApplication.run(Aaaaa.class, args);
+        SpringApplication.run(WebApp.class, args);
     }
 
     @GetMapping("/")

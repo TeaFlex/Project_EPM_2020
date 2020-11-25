@@ -1,35 +1,43 @@
 package be.heh.std.epm.application.service;
 
 import be.heh.std.epm.application.data.DataEmployee;
+import be.heh.std.epm.application.port.in.InUseCase;
 import be.heh.std.epm.application.port.out.OutPersistence;
-import be.heh.std.epm.domain.Employee;
-import be.heh.std.epm.domain.HourlyClassification;
-import be.heh.std.epm.domain.TimeCard;
+import be.heh.std.epm.domain.*;
 
-import java.lang.reflect.Constructor;
 import java.time.LocalDate;
 
-public class OperationEmp {
+public class OperationEmp implements InUseCase {
 
-    private  OutPersistence out;
+    private OutPersistence out;
 
     public OperationEmp (OutPersistence o) {
         this.out = o;
     }
 
-    public void addEmployee(DataEmployee e) {
-        Employee finalemp = new Employee(e.getId(), e.getName(), e.getAddress());
-        finalemp.setPaymentSchedule(e.getPaymentSchedule());
-        finalemp.setPaymentClassification(e.getPaymentClassification());
-        finalemp.setPaymentMethod(e.getPaymentMethod());
-        this.out.save(finalemp);
+    @Override
+    public void addEmployee(DataEmployee e) throws Exception {
+        try {
+            Employee finalEmployee = e.toEmployee();
+            this.out.save(finalEmployee);
+        }
+        catch (Exception err){
+            throw new Exception(err.getMessage());
+        }
     }
 
-    public void deleteEmployee(int id) {
-        this.out.delete(id);
+    @Override
+    public void deleteEmployee(int id) throws Exception {
+        try{
+            this.out.delete(id);
+        }
+        catch(Exception err){
+            throw new Exception(err.getMessage());
+        }
     }
 
-    public void postTimeCard(int id, LocalDate date, double hours) {
+    @Override
+    public void postTimeCard(int id, LocalDate date, double hours) throws Exception {
         Employee e = this.out.getData(id);
         if(e.getPaymentClassification() instanceof HourlyClassification){
 
@@ -37,8 +45,20 @@ public class OperationEmp {
             this.out.replace(e);
         }
         else {
-            //throw error
+            throw new Exception("The chosen employee is not from the classification HOURLY.");
         }
     }
-    
+
+    @Override
+    public void postSaleReceipt(int id, LocalDate date, double price) throws Exception {
+        Employee e = this.out.getData(id);
+        if(e.getPaymentClassification() instanceof CommissionClassification) {
+            ((CommissionClassification) e.getPaymentClassification()).addReceipt(new Receipt(date, price));
+            this.out.replace(e);
+        }
+        else{
+            throw new Exception("The chosen employee is not from the classification COMMISSION.");
+        }
+    }
+
 }

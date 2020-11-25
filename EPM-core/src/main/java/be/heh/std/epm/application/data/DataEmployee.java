@@ -3,6 +3,7 @@ package be.heh.std.epm.application.data;
 import be.heh.std.epm.domain.DirectDepositMethod;
 import be.heh.std.epm.domain.Employee;
 import be.heh.std.epm.domain.MailMethod;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,13 +11,13 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-
+@Data
 public abstract class DataEmployee {
-    @Getter @Setter @NotNull
+    @NotNull
     private int id;
-    @Getter @Setter @NotNull @NotEmpty
+    @NotNull @NotEmpty
     private String name;
-    @Getter @Setter @NotEmpty
+    @NotEmpty
     private String address;
     @NotEmpty
     private String email;
@@ -36,4 +37,5 @@ public abstract class DataEmployee {
         }
         return employee;
     }
+
 }
