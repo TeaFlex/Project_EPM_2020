@@ -41,7 +41,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MissingEmployee'
+                $ref: '#/components/schemas/DeleteError'
     put:
       summary: "Update an Employee by ID"
       parameters:
@@ -150,12 +150,12 @@ components:
           type: string
           example: "e-mail invalide"
           
-    MissingEmployee:
+    DeleteError:
       type: object
       properties:
-        employeeId:
-          type: integer
-          example: 123
+        timestamp:
+          type: string
+          example: "2020-11-26T07:44:23.354+00:00"
         error:
           type: string
           example: "Employé inexistant"
@@ -183,9 +183,9 @@ components:
     TimecardError:
       type: object
       properties:
-        employeeId:
-          type: integer
-          example: 123
+        timestamp:
+          type: string
+          example: "2020-11-26T07:44:23.354+00:00"
         error:
           type: string
           example: "Cette timecard est incorrecte"
@@ -211,9 +211,6 @@ components:
     UpdateEmployee:
       type: object
       properties:
-        empId: 
-          type: integer
-          example: 123
         property:
           type: string
           example: "name"
@@ -224,9 +221,9 @@ components:
     UpdateError:
       type: object
       properties:
-        employeeId:
-          type: integer
-          example: 123
+        timestamp:
+          type: string
+          example: "2020-11-26T07:44:23.354+00:00"
         errors:
           type: string
           example: "L'ID n'est pas correct"
