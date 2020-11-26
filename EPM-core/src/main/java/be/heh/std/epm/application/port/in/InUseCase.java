@@ -1,13 +1,15 @@
 package be.heh.std.epm.application.port.in;
 
 import be.heh.std.epm.application.data.DataEmployee;
+import be.heh.std.epm.application.data.DataReceipt;
+import be.heh.std.epm.application.data.DataTimeCard;
 
 import java.time.LocalDate;
 
 public interface InUseCase {
-    void addEmployee(DataEmployee e) throws Exception;
+    void addEmployee(DataEmployee dataEmployee) throws Exception;
     void deleteEmployee(int id) throws Exception;
-    void postTimeCard(int id, LocalDate date, double hours) throws Exception;
-    void postSaleReceipt(int id, LocalDate date, double price) throws Exception;
+    void postTimeCard(int id, DataTimeCard dataTimeCard) throws Exception;
+    void postSaleReceipt(int id, DataReceipt dataReceipt) throws Exception;
     //void changeEmployeeDetails(int id, String action, )
 }

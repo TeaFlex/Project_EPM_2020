@@ -1,6 +1,8 @@
 package be.heh.std.epm.application.service;
 
 import be.heh.std.epm.application.data.DataEmployee;
+import be.heh.std.epm.application.data.DataReceipt;
+import be.heh.std.epm.application.data.DataTimeCard;
 import be.heh.std.epm.application.port.in.InUseCase;
 import be.heh.std.epm.application.port.out.OutPersistence;
 import be.heh.std.epm.domain.*;
@@ -16,8 +18,8 @@ public class OperationEmp implements InUseCase {
     }
 
     @Override
-    public void addEmployee(DataEmployee e) throws Exception {
-        this.out.save(e.toEmployee());
+    public void addEmployee(DataEmployee dataEmployee) throws Exception {
+        this.out.save(dataEmployee.toEmployee());
     }
 
     @Override
@@ -26,10 +28,10 @@ public class OperationEmp implements InUseCase {
     }
 
     @Override
-    public void postTimeCard(int id, LocalDate date, double hours) throws Exception {
+    public void postTimeCard(int id, DataTimeCard dataTimeCard) throws Exception {
         Employee e = this.out.getData(id);
         if(e.getPaymentClassification() instanceof HourlyClassification){
-            ((HourlyClassification) e.getPaymentClassification()).addTimeCard(new TimeCard(date, hours));
+            ((HourlyClassification) e.getPaymentClassification()).addTimeCard(dataTimeCard.toTimeCard());
             this.out.replace(e);
         } else {
             throw new Exception(String.format("The chosen employee is from %s.",
@@ -38,10 +40,10 @@ public class OperationEmp implements InUseCase {
     }
 
     @Override
-    public void postSaleReceipt(int id, LocalDate date, double price) throws Exception {
+    public void postSaleReceipt(int id, DataReceipt dataReceipt) throws Exception {
         Employee e = this.out.getData(id);
         if(e.getPaymentClassification() instanceof CommissionClassification) {
-            ((CommissionClassification) e.getPaymentClassification()).addReceipt(new Receipt(date, price));
+            ((CommissionClassification) e.getPaymentClassification()).addReceipt(dataReceipt.toReceipt());
             this.out.replace(e);
         } else {
             throw new Exception(String.format("The chosen employee is from %s.",

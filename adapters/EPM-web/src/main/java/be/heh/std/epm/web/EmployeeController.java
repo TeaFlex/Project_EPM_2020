@@ -1,10 +1,7 @@
 package be.heh.std.epm.web;
 
 import be.heh.std.epm.application.adapter.TestPersistence;
-import be.heh.std.epm.application.data.DataCommissionEmployee;
-import be.heh.std.epm.application.data.DataEmployee;
-import be.heh.std.epm.application.data.DataHourlyEmployee;
-import be.heh.std.epm.application.data.DataSalariedEmployee;
+import be.heh.std.epm.application.data.*;
 import be.heh.std.epm.application.service.OperationEmp;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -42,6 +39,7 @@ public class EmployeeController {
                 break;
             case "commission":
                 dataEmployee = gson.fromJson(jsonObject.get("employee"), DataCommissionEmployee.class);
+                break;
             default:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Employee type not supported.");
         }
@@ -71,14 +69,34 @@ public class EmployeeController {
     }
 
     @PostMapping(value = "/timecard", consumes =  MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<String> addTimeCard() {
-        //TODO
+    ResponseEntity<String> addTimeCard(@RequestBody String body) {
+        JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
+        if (!jsonObject.has("employeeID") || !jsonObject.has("timecard")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Malformed data in request body.");
+        }
+        int id = jsonObject.get("employeeID").getAsInt();
+        DataTimeCard dataTimeCard = gson.fromJson(jsonObject.get("timecard"), DataTimeCard.class);
+        try {
+            operationEmp.postTimeCard(id, dataTimeCard);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
         return ResponseEntity.status(HttpStatus.OK).body("Time card added.");
     }
 
     @PostMapping(value = "/salesreceipt", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<String> addSalesReceipt() {
-        //TODO
+    ResponseEntity<String> addSalesReceipt(@RequestBody String body) {
+        JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
+        if (!jsonObject.has("employeeID") || !jsonObject.has("salesreceipt")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Malformed data in request body.");
+        }
+        int id = jsonObject.get("employeeID").getAsInt();
+        DataReceipt dataReceipt = gson.fromJson(jsonObject.get("salesreceipt"), DataReceipt.class);
+        try {
+            operationEmp.postSaleReceipt(id, dataReceipt);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
         return ResponseEntity.status(HttpStatus.OK).body("Sales receipt posted.");
     }
 }
