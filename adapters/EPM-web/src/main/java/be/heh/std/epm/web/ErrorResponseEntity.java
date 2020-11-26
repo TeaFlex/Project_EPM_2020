@@ -12,24 +12,13 @@ public class ErrorResponseEntity extends ResponseEntity<String> {
     private static Gson gson = new Gson();
 
     public ErrorResponseEntity(String message) {
-        super(generateTimestampJson(message), HttpStatus.BAD_REQUEST);
+        super(generateJson(message), HttpStatus.BAD_REQUEST);
     }
 
-    public ErrorResponseEntity(int id, String message) {
-        super(generateIdJson(id, message), HttpStatus.BAD_REQUEST);
-    }
-
-    private static String generateTimestampJson(String message) {
+    private static String generateJson(String message) {
         JsonObject jsonObject = new JsonObject();
         Timestamp now = new Timestamp(System.currentTimeMillis());
         jsonObject.addProperty("timestamp", now.toString());
-        jsonObject.addProperty("error", message);
-        return gson.toJson(jsonObject);
-    }
-
-    private static String generateIdJson(int id, String message) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("empId", id);
         jsonObject.addProperty("error", message);
         return gson.toJson(jsonObject);
     }

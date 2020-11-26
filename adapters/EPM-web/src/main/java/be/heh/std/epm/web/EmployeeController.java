@@ -47,7 +47,7 @@ public class EmployeeController {
         try {
             operationEmp.addEmployee(dataEmployee);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Employee already exists.");
+            return new ErrorResponseEntity(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
@@ -57,7 +57,7 @@ public class EmployeeController {
         try {
             operationEmp.deleteEmployee(id);
         } catch (Exception e) {
-            return new ErrorResponseEntity(id, "There is no employee associated to the specified ID.");
+            return new ErrorResponseEntity(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
@@ -79,7 +79,7 @@ public class EmployeeController {
         try {
             operationEmp.postTimeCard(id, dataTimeCard);
         } catch (Exception e) {
-            return new ErrorResponseEntity(id, e.getMessage());
+            return new ErrorResponseEntity(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
@@ -95,7 +95,7 @@ public class EmployeeController {
         try {
             operationEmp.postSaleReceipt(id, dataReceipt);
         } catch (Exception e) {
-            return new ErrorResponseEntity(id, e.getMessage());
+            return new ErrorResponseEntity(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
