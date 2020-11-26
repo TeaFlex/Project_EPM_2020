@@ -5,8 +5,8 @@ import be.heh.std.epm.persistence.access.DBPersistence;
 
 public class H2Persistence extends DBPersistence {
 
-    public H2Persistence (String server) {
-        super("h2", server);
+    public H2Persistence (String server, String username, String password) {
+        super("h2", server, username, password);
     }
 
     @Override

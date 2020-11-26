@@ -8,19 +8,21 @@ import java.util.Properties;
 public abstract class DBPersistence implements OutPersistence {
 
     protected Connection connection;
-    private String url, path, type;
+    private String url, path, type, username, password;
     private Properties connectionProps;
 
-    public DBPersistence(String type, String path) {
+    public DBPersistence(String type, String path, String username, String password) {
         connection = null;
         url = String.format("jdbc:%s:%s", type, path);
         connectionProps = new Properties();
         this.path = path;
         this.type = type;
+        this.username = username;
+        this.password = password;
     }
 
     @Override
-    public void connect(String username, String password) throws SQLException {
+    public void connect() throws SQLException {
         if(connection == null) {
             connectionProps.put("user", username);
             connectionProps.put("password", password);

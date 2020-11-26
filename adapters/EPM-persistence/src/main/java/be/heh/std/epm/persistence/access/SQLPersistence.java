@@ -7,8 +7,8 @@ import java.sql.SQLException;
 
 public class SQLPersistence extends DBPersistence {
 
-    public SQLPersistence(String server) throws SQLException {
-        super("sql", "://");
+    public SQLPersistence(String server, String username, String password) throws SQLException {
+        super("sql", "://", username, password);
     }
 
     @Override
