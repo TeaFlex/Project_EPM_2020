@@ -4,9 +4,8 @@ import be.heh.std.epm.domain.DirectDepositMethod;
 import be.heh.std.epm.domain.Employee;
 import be.heh.std.epm.domain.MailMethod;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
@@ -17,9 +16,9 @@ public abstract class DataEmployee {
     private int id;
     @NotNull @NotEmpty
     private String name;
-    @NotEmpty
+    @NotNull @NotEmpty
     private String address;
-    @NotEmpty
+    @NotEmpty @Email
     private String email;
     @NotEmpty
     private String bank;
@@ -33,7 +32,7 @@ public abstract class DataEmployee {
         } else if (!Objects.isNull(bank) && !Objects.isNull(iban)) {
             employee.setPaymentMethod(new DirectDepositMethod(bank, iban));
         } else {
-            throw new Exception("Informations such as the email or the iban with the assiciated bank are not given.");
+            throw new Exception("Payment method information is either missing or incomplete.");
         }
         return employee;
     }

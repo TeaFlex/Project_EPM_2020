@@ -11,5 +11,5 @@ public interface InUseCase {
     void deleteEmployee(int id) throws Exception;
     void postTimeCard(int id, DataTimeCard dataTimeCard) throws Exception;
     void postSaleReceipt(int id, DataReceipt dataReceipt) throws Exception;
-    //void changeEmployeeDetails(int id, String action, )
+    <T> void updateEmployee(int id, String field, T value) throws Exception;
 }
