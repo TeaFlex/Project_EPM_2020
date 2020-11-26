@@ -8,3 +8,12 @@ CREATE TABLE IF NOT EXISTS Employees(
 
     CONSTRAINT pk_EmpID PRIMARY KEY(EmpID)
 );
+
+
+CREATE TABLE IF NOT EXISTS SalariedClass(
+    EmpID int,
+    salary DOUBLE,
+
+    PRIMARY KEY(EmpID),
+    FOREIGN KEY(EmpID) REFERENCES Employees(EmpID)
+);
