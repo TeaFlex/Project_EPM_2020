@@ -7,7 +7,7 @@ public interface OutPersistence {
     void delete(int id) throws Exception;
     void replace(Employee emp) throws Exception;
     Employee getData(int id) throws Exception;
-    void connect(String username, String password) throws Exception;
+    void connect() throws Exception;
     void disconnect() throws Exception;
     boolean isConnected();
 }

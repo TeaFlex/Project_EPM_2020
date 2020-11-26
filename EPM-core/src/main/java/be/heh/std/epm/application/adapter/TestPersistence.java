@@ -33,7 +33,7 @@ public class TestPersistence implements OutPersistence {
     }
 
     @Override
-    public void connect(String username, String password) throws Exception{
+    public void connect() throws Exception{
 
     }
 

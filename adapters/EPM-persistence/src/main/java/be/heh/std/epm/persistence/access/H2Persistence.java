@@ -1,13 +1,12 @@
-package be.heh.std.epm.persistence;
+package be.heh.std.epm.persistence.access;
 
 import be.heh.std.epm.domain.Employee;
+import be.heh.std.epm.persistence.access.DBPersistence;
 
-import java.sql.SQLException;
+public class H2Persistence extends DBPersistence {
 
-public class SQLPersistence extends DBPersistence {
-
-    public SQLPersistence(String server) throws SQLException {
-        super("sql", "://");
+    public H2Persistence (String server) {
+        super("h2", server);
     }
 
     @Override

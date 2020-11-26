@@ -1,4 +1,4 @@
-package be.heh.std.epm.persistence;
+package be.heh.std.epm.persistence.access;
 
 import be.heh.std.epm.application.port.out.OutPersistence;
 
