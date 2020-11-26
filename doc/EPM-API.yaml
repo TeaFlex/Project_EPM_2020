@@ -12,7 +12,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BodyEmployee'
+              $ref: '#/components/schemas/EmployeeBody'
       responses:
         '201':
           description: "[201] AddEmployee Success"
@@ -73,7 +73,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BodyTimecard'
+              $ref: '#/components/schemas/TimecardBody'
       responses:
         '200':
           description: "[200] TimecardPost Success"
@@ -91,7 +91,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BodySalesreceipt'
+              $ref: '#/components/schemas/SalesreceiptBody'
       responses:
         '200':
           description: "[200] SalesReceiptPost Success"
@@ -100,7 +100,7 @@ paths:
 
 components:
   schemas:
-    BodyEmployee:
+    EmployeeBody:
       type: object
       properties:
         type:
@@ -163,7 +163,7 @@ components:
           example: "Employé inexistant"
           
           
-    BodyTimecard:
+    TimecardBody:
       type: object
       properties: 
         employeeID:
@@ -175,9 +175,6 @@ components:
     TimecardObject:
       type: object
       properties:
-        empId:
-          type: integer
-          example: 123
         date:
           type: string
           example: "2020-10-29"
@@ -197,7 +194,7 @@ components:
             type: string
             example: "Cette timecard est incorrecte"
             
-    BodySalesreceipt:
+    SalesreceiptBody:
       type: object
       properties:
         employeeID:
@@ -208,12 +205,6 @@ components:
     SalesreceiptObject:
       type: object
       properties:
-        empId:
-          type: integer
-          example: 123
-        date:
-          type: string
-          example: "2020-10-29"
         hours:
           type: string
           example: "6h"
