@@ -21,12 +21,12 @@ public class EmployeeController {
         operationEmp = new OperationEmp(new TestPersistence());
     }
 
-    @PostMapping(value = "/employees", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/employees", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     ResponseEntity<String> addEmployee(@RequestBody String body) {
         JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
         if (!jsonObject.has("type") || !jsonObject.has("employee")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Malformed data in request body.");
+            return new ErrorResponseEntity("Malformed data in request body.");
         }
         String type = jsonObject.get("type").getAsString();
         DataEmployee dataEmployee;
@@ -41,7 +41,7 @@ public class EmployeeController {
                 dataEmployee = gson.fromJson(jsonObject.get("employee"), DataCommissionEmployee.class);
                 break;
             default:
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Employee type not supported.");
+                return new ErrorResponseEntity("Employee type not supported.");
         }
 
         try {
@@ -49,54 +49,54 @@ public class EmployeeController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Employee already exists.");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body("Employee created.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
-    @DeleteMapping(value = "/employees/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/employees/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> removeEmployee(@PathVariable int id) {
         try {
             operationEmp.deleteEmployee(id);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("There is no employee associated to the specified ID.");
+            return new ErrorResponseEntity(id, "There is no employee associated to the specified ID.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Employee deleted.");
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @PutMapping(value = "/employees/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<String> updateEmployee(@PathVariable int id) {
+    @PutMapping(value = "/employees/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<String> updateEmployee(@PathVariable int id, @RequestBody String body) {
         //TODO
-        return ResponseEntity.status(HttpStatus.OK).body("Employee updated.");
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @PostMapping(value = "/timecard", consumes =  MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/timecard", consumes =  MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> addTimeCard(@RequestBody String body) {
         JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
         if (!jsonObject.has("employeeID") || !jsonObject.has("timecard")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Malformed data in request body.");
+            return new ErrorResponseEntity("Malformed data in request body.");
         }
         int id = jsonObject.get("employeeID").getAsInt();
         DataTimeCard dataTimeCard = gson.fromJson(jsonObject.get("timecard"), DataTimeCard.class);
         try {
             operationEmp.postTimeCard(id, dataTimeCard);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return new ErrorResponseEntity(id, e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Time card added.");
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @PostMapping(value = "/salesreceipt", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/salesreceipt", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> addSalesReceipt(@RequestBody String body) {
         JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
         if (!jsonObject.has("employeeID") || !jsonObject.has("salesreceipt")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Malformed data in request body.");
+            return new ErrorResponseEntity("Malformed data in request body.");
         }
         int id = jsonObject.get("employeeID").getAsInt();
         DataReceipt dataReceipt = gson.fromJson(jsonObject.get("salesreceipt"), DataReceipt.class);
         try {
             operationEmp.postSaleReceipt(id, dataReceipt);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return new ErrorResponseEntity(id, e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Sales receipt posted.");
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }
