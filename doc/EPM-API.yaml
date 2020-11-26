@@ -145,17 +145,15 @@ components:
       properties:
         timestamp:
           type: string
-          example: "2020-10-29T07:44:23.354+00:00"
-        errors:
-          type: array
-          items: 
-            type: string
-            example: "e-mail invalide"
+          example: "2020-11-26T07:44:23.354+00:00"
+        error:
+          type: string
+          example: "e-mail invalide"
           
     MissingEmployee:
       type: object
       properties:
-        empId:
+        employeeId:
           type: integer
           example: 123
         error:
@@ -177,7 +175,7 @@ components:
       properties:
         date:
           type: string
-          example: "2020-10-29"
+          example: "2020-11-26"
         hours:
           type: string
           example: "6h"
@@ -185,14 +183,12 @@ components:
     TimecardError:
       type: object
       properties:
-        empId:
+        employeeId:
           type: integer
           example: 123
-        errors:
-          type: array
-          items:
-            type: string
-            example: "Cette timecard est incorrecte"
+        error:
+          type: string
+          example: "Cette timecard est incorrecte"
             
     SalesreceiptBody:
       type: object
@@ -228,14 +224,12 @@ components:
     UpdateError:
       type: object
       properties:
-        empId:
+        employeeId:
           type: integer
           example: 123
         errors:
-          type: array
-          items:
-            type: string
-            example: "L'ID n'est pas correct"
+          type: string
+          example: "L'ID n'est pas correct"
             
 servers:
   - url: 'https://virtserver.swaggerhub.com/Iucapad/EPM-API/1.0.0'
