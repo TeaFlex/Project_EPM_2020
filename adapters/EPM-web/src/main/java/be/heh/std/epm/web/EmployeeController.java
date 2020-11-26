@@ -2,7 +2,9 @@ package be.heh.std.epm.web;
 
 import be.heh.std.epm.application.adapter.TestPersistence;
 import be.heh.std.epm.application.data.*;
+import be.heh.std.epm.application.port.out.OutPersistence;
 import be.heh.std.epm.application.service.OperationEmp;
+import be.heh.std.epm.persistence.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.springframework.http.HttpStatus;
@@ -15,10 +17,13 @@ public class EmployeeController {
 
     private Gson gson;
     private OperationEmp operationEmp;
+    private OutPersistence db;
 
     public EmployeeController() {
+        //db = new TestPersistence();
+        db = new H2Persistence("mem:test");
         gson = new Gson();
-        operationEmp = new OperationEmp(new TestPersistence());
+        operationEmp = new OperationEmp(db);
     }
 
     @PostMapping(value = "/employees", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
