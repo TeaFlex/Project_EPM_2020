@@ -7,45 +7,37 @@ import java.util.Properties;
 
 public abstract class DBPersistence implements OutPersistence {
 
-    protected Connection connection;
-    private String url, path, type, username, password;
-    private Properties connectionProps;
+    private Connection connection;
+    private String url, username, password;
 
     public DBPersistence(String type, String path, String username, String password) {
         connection = null;
         url = String.format("jdbc:%s:%s", type, path);
-        connectionProps = new Properties();
-        this.path = path;
-        this.type = type;
         this.username = username;
         this.password = password;
     }
 
-    @Override
-    public void connect() throws SQLException {
+    protected void connect() throws Exception {
         if(connection == null) {
-            connectionProps.put("user", username);
-            connectionProps.put("password", password);
-            connection = DriverManager.getConnection(this.url, this.connectionProps);
-            System.out.printf("Connected to %s (%s) as %s.%n", path, type, username);
+            connection = DriverManager.getConnection(this.url, this.username, this.password);
+            System.out.printf("Connected to %s as %s.%n", url, username);
         }
-        else
-            throw new SQLException("You are already connected.");
     }
 
-    @Override
-    public void disconnect() throws SQLException{
+    protected void disconnect() throws Exception{
         if(connection != null){
             connection.close();
             connection = null;
-            System.out.printf("Disconnected from %s (%s).%n", path, type);
+            System.out.printf("Disconnected from %s.%n", url);
         }
-        else
-            throw new SQLException("The database is already closed.");
     }
 
-    @Override
+    protected Connection getConnection() {
+        return connection;
+    }
+
     public boolean isConnected() {
         return connection != null;
     }
+
 }

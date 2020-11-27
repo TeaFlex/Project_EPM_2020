@@ -33,21 +33,6 @@ public class TestPersistence implements OutPersistence {
     }
 
     @Override
-    public void connect() throws Exception{
-
-    }
-
-    @Override
-    public void disconnect() throws Exception{
-
-    }
-
-    @Override
-    public boolean isConnected() {
-        return database != null;
-    }
-
-    @Override
     public void replace(Employee e) throws Exception {
         if(!database.containsKey(e.getEmpID()))
             throw new Exception("There's no such employee to replace.");

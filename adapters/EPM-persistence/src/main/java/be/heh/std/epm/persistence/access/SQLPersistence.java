@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class SQLPersistence extends DBPersistence {
 
-    public SQLPersistence(String server, String username, String password) throws SQLException {
+    public SQLPersistence(String server, String username, String password) {
         super("sql", "://", username, password);
     }
 
