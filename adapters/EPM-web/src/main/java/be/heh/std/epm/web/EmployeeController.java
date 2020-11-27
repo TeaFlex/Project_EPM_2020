@@ -3,6 +3,7 @@ package be.heh.std.epm.web;
 import be.heh.std.epm.application.data.*;
 import be.heh.std.epm.application.port.out.OutPersistence;
 import be.heh.std.epm.application.service.OperationEmp;
+import be.heh.std.epm.persistence.access.DBPersistence;
 import be.heh.std.epm.persistence.access.H2Persistence;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -23,17 +24,6 @@ public class EmployeeController {
         db = new H2Persistence("mem:test", "user", "123");
         gson = new Gson();
         operationEmp = new OperationEmp(db);
-    }
-
-    @RequestMapping(value = "/db")
-    public String database() {
-        try {
-            db.connect();
-            db.disconnect();
-            return String.valueOf(db.isConnected());
-        } catch (Exception e) {
-            return e.getMessage();
-        }
     }
 
     @PostMapping(value = "/employees", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
