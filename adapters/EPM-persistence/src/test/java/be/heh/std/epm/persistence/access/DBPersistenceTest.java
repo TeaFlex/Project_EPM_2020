@@ -13,7 +13,7 @@ public class DBPersistenceTest {
 
     @Before
     public void setup() {
-        db = new H2Persistence("mem:test", "user","123");
+        db = new H2Persistence("file:~/h2DBs/mydb", "user","123");
         employee = new DataSalariedEmployee();
     }
 
@@ -35,13 +35,10 @@ public class DBPersistenceTest {
     }
 
     @Test
-    public void saveEmployee() {
-        try {
-            setInfos(employee);
-            setBankMethod(employee);
-            db.save(employee.toEmployee());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+    public void saveEmployee() throws Exception{
+        setBankMethod(employee);
+        //db.save(employee.toEmployee());
+
+        System.out.println(db.getData(employee.getId()));
     }
 }

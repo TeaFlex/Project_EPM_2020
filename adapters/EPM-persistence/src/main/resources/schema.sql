@@ -1,3 +1,4 @@
+
 CREATE TABLE IF NOT EXISTS Employees(
     EmpID INTEGER(5),
     nameEmp VARCHAR(45) NOT NULL,
@@ -52,3 +53,4 @@ CREATE TABLE IF NOT EXISTS Receipts(
     PRIMARY KEY(EmpID, tDate),
     FOREIGN KEY(EmpID) REFERENCES CommissionClassification(EmpID)
 );
+

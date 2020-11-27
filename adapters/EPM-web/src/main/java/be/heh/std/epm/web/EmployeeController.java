@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
+
 @RestController
 public class EmployeeController {
 
@@ -21,7 +23,7 @@ public class EmployeeController {
 
     public EmployeeController() {
         //db = new TestPersistence();
-        db = new H2Persistence("mem:test", "user", "123");
+        db = new H2Persistence("file:~/h2DBs/mydb", "user", "123");
         gson = new Gson();
         operationEmp = new OperationEmp(db);
     }

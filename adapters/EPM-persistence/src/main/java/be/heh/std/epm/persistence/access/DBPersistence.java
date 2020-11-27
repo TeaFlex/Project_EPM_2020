@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public abstract class DBPersistence implements OutPersistence {
 
-    protected Connection connection;
+    private Connection connection;
     private String url, username, password;
 
     public DBPersistence(String type, String path, String username, String password) {
