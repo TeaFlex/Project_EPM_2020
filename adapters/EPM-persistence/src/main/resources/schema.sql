@@ -3,9 +3,10 @@ CREATE TABLE IF NOT EXISTS Employees(
     EmpID INTEGER(5),
     nameEmp VARCHAR(45) NOT NULL,
     addressEmp VARCHAR(45) NOT NULL,
-    paymentClassification VARCHAR(45) NOT NULL,
+    type VARCHAR(45) NOT NULL,
     paymentMethod VARCHAR(45) NOT NULL,
-    paymentSchedule VARCHAR(45) NOT NULL,
+    --paymentSchedule VARCHAR(45) NOT NULL,
+    --paymentClassification VARCHAR(45) NOT NULL,
 
     CONSTRAINT pk_EmpID PRIMARY KEY(EmpID)
 );
@@ -16,7 +17,7 @@ CREATE TABLE IF NOT EXISTS SalariedClassification(
     salary DOUBLE,
 
     PRIMARY KEY(EmpID),
-    FOREIGN KEY(EmpID) REFERENCES Employees(EmpID)
+    FOREIGN KEY(EmpID) REFERENCES Employees(EmpID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS CommissionClassification(
@@ -25,7 +26,7 @@ CREATE TABLE IF NOT EXISTS CommissionClassification(
     rate DOUBLE,
 
     PRIMARY KEY(EmpID),
-    FOREIGN KEY(EmpID) REFERENCES Employees(EmpID)
+    FOREIGN KEY(EmpID) REFERENCES Employees(EmpID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS HourlyClassification(
@@ -33,7 +34,7 @@ CREATE TABLE IF NOT EXISTS HourlyClassification(
     salary DOUBLE,
 
     PRIMARY KEY(EmpID),
-    FOREIGN KEY(EmpID) REFERENCES Employees(EmpID)
+    FOREIGN KEY(EmpID) REFERENCES Employees(EmpID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS TimeCards(
@@ -42,7 +43,7 @@ CREATE TABLE IF NOT EXISTS TimeCards(
     hours DOUBLE,
 
     PRIMARY KEY(EmpID, tDate),
-    FOREIGN KEY(EmpID) REFERENCES HourlyClassification(EmpID)
+    FOREIGN KEY(EmpID) REFERENCES HourlyClassification(EmpID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Receipts(
@@ -51,6 +52,23 @@ CREATE TABLE IF NOT EXISTS Receipts(
     price DOUBLE,
 
     PRIMARY KEY(EmpID, tDate),
-    FOREIGN KEY(EmpID) REFERENCES CommissionClassification(EmpID)
+    FOREIGN KEY(EmpID) REFERENCES CommissionClassification(EmpID) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS DirectDepositMethod(
+    EmpID int,
+    Iban VARCHAR(45),
+    Bank VARCHAR(45),
+
+    PRIMARY KEY(EmpID),
+    FOREIGN KEY(EmpID) REFERENCES Employees(EmpID) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS MailMethod(
+    EmpID int,
+    Email VARCHAR(45),
+
+    PRIMARY KEY(EmpID),
+    FOREIGN KEY(EmpID) REFERENCES Employees(EmpID) ON DELETE CASCADE
 );
 

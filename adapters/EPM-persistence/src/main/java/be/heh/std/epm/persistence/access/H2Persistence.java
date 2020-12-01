@@ -4,8 +4,7 @@ import be.heh.std.epm.application.data.DataCommissionEmployee;
 import be.heh.std.epm.application.data.DataEmployee;
 import be.heh.std.epm.application.data.DataHourlyEmployee;
 import be.heh.std.epm.application.data.DataSalariedEmployee;
-import be.heh.std.epm.domain.Employee;
-import be.heh.std.epm.domain.SalariedClassification;
+import be.heh.std.epm.domain.*;
 import be.heh.std.epm.persistence.access.DBPersistence;
 
 import javax.swing.plaf.nimbus.State;
@@ -23,28 +22,85 @@ public class H2Persistence extends DBPersistence {
     @Override
     public void save(Employee emp) throws Exception {
         connect();
+
+        //Query on Employees table
+
         String query = "insert into EMPLOYEES " +
-                "(EmpID, NameEmp, AddressEmp, PaymentClassification, PaymentMethod, PaymentSchedule) " +
-                "VALUES (?, ?, ?, ?, ?, ?);";
+                "(EmpID, NameEmp, AddressEmp, type, PaymentMethod) " +
+                "VALUES (?, ?, ?, ?, ?);";
+        String type = emp.getPaymentClassification().getClass().getSimpleName();
+        String method = emp.getPaymentMethod().getClass().getSimpleName();
+
         PreparedStatement prep = getConnection().prepareStatement(query);
 
         prep.setInt(1, emp.getEmpID());
         prep.setString(2, emp.getName());
         prep.setString(3, emp.getAddress());
-        prep.setString(4, emp.getPaymentClassification().getClass().getSimpleName());
-        prep.setString(5, emp.getPaymentMethod().getClass().getSimpleName());
-        prep.setString(6, emp.getPaymentSchedule().getClass().getSimpleName());
+        prep.setString(4, type);
+        prep.setString(5, method);
 
         int rowsAffected = prep.executeUpdate();
 
-        //query = String.format("insert into %s (%s)", emp.getPaymentClassification(), );
+        //Query on any Classification table
+
+        query = String.format("insert into %s (EmpID, salary)" +
+                "VALUES (?, ?);", type);
+        prep = getConnection().prepareStatement(query);
+
+        if(type.equals("CommissionClassification")) {
+            query = String.format("insert into %s (EmpID, salary, rate)" +
+                    "VALUES (?, ?, ?);", type);
+            prep = getConnection().prepareStatement(query);
+            double rate = ((CommissionClassification) emp.getPaymentClassification()).getCommissionRate();
+            prep.setDouble(3, rate);
+        }
+
+        prep.setInt(1, emp.getEmpID());
+        prep.setDouble(2, emp.getPaymentClassification().getSalary());
+
+        rowsAffected = prep.executeUpdate();
+
+        //Query on any Method table
+
+        query = String.format("insert into %s (EmpID, ", method);
+
+        if(method.equals("DirectDepositMethod")) {
+            query += "Iban, Bank) VALUES (?, ?, ?);";
+            prep = getConnection().prepareStatement(query);
+            prep.setInt(1, emp.getEmpID());
+            String[] infos = {
+                    ((DirectDepositMethod)emp.getPaymentMethod()).getBank(),
+                    ((DirectDepositMethod)emp.getPaymentMethod()).getIban()
+            };
+            prep.setString(2, infos[0]);
+            prep.setString(3, infos[1]);
+        }
+        else if(method.equals("MailMethod")) {
+            query += "email) VALUES (?, ?);";
+            prep = getConnection().prepareStatement(query);
+            prep.setInt(1, emp.getEmpID());
+            String email = ((MailMethod)emp.getPaymentMethod()).getEmail();
+            prep.setString(2,email);
+        }
+
+        rowsAffected = prep.executeUpdate();
 
         disconnect();
     }
 
     @Override
     public void delete(int id) throws Exception {
-        //TODO
+        connect();
+
+        String query = "Delete from Employees where EmpId = ?;";
+
+        PreparedStatement prep = getConnection().prepareStatement(query);
+
+        prep.setInt(1, id);
+
+        int r = prep.executeUpdate();
+
+        disconnect();
     }
 
     @Override
@@ -55,14 +111,14 @@ public class H2Persistence extends DBPersistence {
     @Override
     public Employee getData(int id) throws Exception {
         DataEmployee response = null;
-        String type = "";
         connect();
-        String query = String.format("SELECT PaymentClassification FROM EMPLOYEES WHERE empid=%d", id);
+        String query = String.format("SELECT type, paymentmethod FROM EMPLOYEES WHERE empid=%d", id);
         Statement statement = getConnection().createStatement();
 
         ResultSet rs = statement.executeQuery(query);
         rs.next();
-        type = rs.getString("PaymentClassification");
+        String type = rs.getString("type");
+        String method = rs.getString("paymentMethod");
 
         switch (type.replace("Classification", "")) {
             case "Salaried":
@@ -76,7 +132,6 @@ public class H2Persistence extends DBPersistence {
                 break;
         }
 
-        rs =null;
         query = String.format("SELECT E.nameemp, E.addressemp, T.* from EMPLOYEES E, " +
                 "%s T WHERE T.empid = %d", type, id);
         rs = statement.executeQuery(query);
@@ -85,6 +140,7 @@ public class H2Persistence extends DBPersistence {
         response.setId(rs.getInt("EMPID"));
         response.setName(rs.getString("NAMEEMP"));
         response.setAddress(rs.getString("addressEmp"));
+
 
         statement =null;
         disconnect();

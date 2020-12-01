@@ -39,6 +39,7 @@ public class DBPersistenceTest {
         setBankMethod(employee);
         //db.save(employee.toEmployee());
 
-        System.out.println(db.getData(employee.getId()));
+        db.delete(2);
+        //System.out.println(db.getData(1));
     }
 }

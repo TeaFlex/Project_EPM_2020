@@ -7,6 +7,7 @@ import java.util.List;
 
 public class HourlyClassification implements PaymentClassification {
 
+    @Getter
     private double salary;
     @Getter
     private List<TimeCard> timeCards;

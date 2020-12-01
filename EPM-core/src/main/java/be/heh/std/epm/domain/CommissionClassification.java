@@ -8,6 +8,7 @@ public class CommissionClassification extends SalariedClassification {
 
     @Getter
     private List<Receipt>receipts;
+    @Getter
     private double commissionRate;
 
     public CommissionClassification(double salary, double commissionRate) {
