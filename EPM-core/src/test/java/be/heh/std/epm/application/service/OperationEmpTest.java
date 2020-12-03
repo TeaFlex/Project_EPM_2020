@@ -1,10 +1,7 @@
 package be.heh.std.epm.application.service;
 
 import be.heh.std.epm.application.adapter.TestPersistence;
-import be.heh.std.epm.application.data.DataCommissionEmployee;
-import be.heh.std.epm.application.data.DataEmployee;
-import be.heh.std.epm.application.data.DataHourlyEmployee;
-import be.heh.std.epm.application.data.DataSalariedEmployee;
+import be.heh.std.epm.application.data.*;
 import be.heh.std.epm.domain.*;
 import org.junit.*;
 
@@ -18,7 +15,8 @@ public class OperationEmpTest {
     private TestPersistence db;
     private DataEmployee emp;
     private OperationEmp op;
-    private LocalDate d;
+    private DataReceipt r;
+    private DataTimeCard tc;
 
     public void setInfos(DataEmployee e) {
         e.setId(1);
@@ -31,7 +29,12 @@ public class OperationEmpTest {
     public void setUp(){
         db = new TestPersistence();
         op = new OperationEmp(db);
-        d = LocalDate.of(2000,1,1);
+        r = new DataReceipt();
+        tc = new DataTimeCard();
+        r.setPrice(200);
+        r.setDate("2000-12-12");
+        tc.setDate("2000-12-12");
+        tc.setHours(20);
     }
 
     @Test
@@ -82,11 +85,10 @@ public class OperationEmpTest {
 
         emp = new DataHourlyEmployee();
         setInfos(emp);
-        double h = 25;
 
         op.addEmployee(emp);
-        op.postTimeCard(emp.getId(), d, h);
-        TimeCard t = new TimeCard(d, h);
+        op.postTimeCard(emp.getId(), tc);
+        TimeCard t = new TimeCard(LocalDate.of(2000,12,12), 20);
 
         assertEquals(1, ((HourlyClassification)db.getData(emp.getId()).getPaymentClassification())
                 .getTimeCards().size());
@@ -102,7 +104,7 @@ public class OperationEmpTest {
         emp = new DataSalariedEmployee();
         setInfos(emp);
 
-        op.postTimeCard(emp.getId(), LocalDate.now(), 44);
+        op.postTimeCard(emp.getId(), tc);
     }
 
     @Test(expected = Exception.class)
@@ -111,21 +113,20 @@ public class OperationEmpTest {
         emp = new DataCommissionEmployee();
         setInfos(emp);
 
-        op.postTimeCard(emp.getId(), d, 44);
-        op.postTimeCard(emp.getId(), d, 44);
+        op.postTimeCard(emp.getId(), tc);
+        op.postTimeCard(emp.getId(), tc);
     }
 
     @Test
     public void postReceipt() throws Exception{
         emp = new DataCommissionEmployee();
         setInfos(emp);
-        double p = 120;
 
         op.addEmployee(emp);
-        op.postSaleReceipt(emp.getId(), d, p);
+        op.postSaleReceipt(emp.getId(), r);
 
         Employee res = db.getData(emp.getId());
-        Receipt r = new Receipt(d, p);
+        Receipt r = new Receipt(LocalDate.of(2000,12,12), 200);
 
         assertEquals(1,((CommissionClassification)res.getPaymentClassification()).getReceipts().size());
         assertNotNull(((CommissionClassification)res.getPaymentClassification()).getReceipts().get(0));
@@ -138,7 +139,7 @@ public class OperationEmpTest {
         emp = new DataSalariedEmployee();
         setInfos(emp);
 
-        op.postSaleReceipt(emp.getId(), LocalDate.now(), 250);
+        op.postSaleReceipt(emp.getId(), r);
     }
 
     @Test(expected = Exception.class)
@@ -147,7 +148,7 @@ public class OperationEmpTest {
         emp = new DataCommissionEmployee();
         setInfos(emp);
 
-        op.postSaleReceipt(emp.getId(), d, 204);
-        op.postSaleReceipt(emp.getId(), d, 204);
+        op.postSaleReceipt(emp.getId(), r);
+        op.postSaleReceipt(emp.getId(), r);
     }
 }
