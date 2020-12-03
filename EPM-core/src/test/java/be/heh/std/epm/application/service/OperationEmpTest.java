@@ -32,8 +32,8 @@ public class OperationEmpTest {
         r = new DataReceipt();
         tc = new DataTimeCard();
         r.setPrice(200);
-        r.setDate("2000-12-12");
-        tc.setDate("2000-12-12");
+        r.setDate(LocalDate.parse("2000-12-12"));
+        tc.setDate(LocalDate.parse("2000-12-12"));
         tc.setHours(20);
     }
 

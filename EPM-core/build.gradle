@@ -34,6 +34,8 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 
     implementation 'org.hibernate.validator:hibernate-validator:6.0.16.Final'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
 }
 
 application {
