@@ -27,7 +27,7 @@ public class EmployeeController {
         gson = new Gson();
         operationEmp = new OperationEmp(db);
     }
-
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(value = "/employees", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     ResponseEntity<String> addEmployee(@RequestBody String body) {
