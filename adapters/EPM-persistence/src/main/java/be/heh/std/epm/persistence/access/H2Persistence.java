@@ -132,15 +132,24 @@ public class H2Persistence extends DBPersistence {
                 break;
         }
 
-        query = String.format("SELECT E.nameemp, E.addressemp, T.* from EMPLOYEES E, " +
-                "%s T WHERE T.empid = %d", type, id);
+        query = String.format("SELECT E.nameemp, E.addressemp, T.*, G.* from EMPLOYEES E, " +
+                "%s T, %s G WHERE E.empid=%d AND T.empid = E.empid AND G.empid = E.empid;", type, method, id);
         rs = statement.executeQuery(query);
         rs.next();
-        System.out.println(query);
-        response.setId(rs.getInt("EMPID"));
-        response.setName(rs.getString("NAMEEMP"));
-        response.setAddress(rs.getString("addressEmp"));
 
+        response.setId(rs.getInt("empid"));
+        response.setName(rs.getString("nameemp"));
+        response.setAddress(rs.getString("addressemp"));
+
+        switch (method.replace("Method", "")) {
+            case "Mail":
+                response.setEmail(rs.getString("email"));
+                break;
+            case "DirectDeposit":
+                response.setIban(rs.getString("iban"));
+                response.setBank(rs.getString("bank"));
+                break;
+        }
 
         statement =null;
         disconnect();

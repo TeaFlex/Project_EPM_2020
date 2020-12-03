@@ -1,10 +1,11 @@
 package be.heh.std.epm.persistence.access;
 
 import be.heh.std.epm.application.data.DataEmployee;
-import be.heh.std.epm.application.data.DataSalariedEmployee;
+import be.heh.std.epm.application.data.DataHourlyEmployee;
 import be.heh.std.epm.application.port.out.OutPersistence;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class DBPersistenceTest {
 
@@ -14,32 +15,33 @@ public class DBPersistenceTest {
     @Before
     public void setup() {
         db = new H2Persistence("file:~/h2DBs/mydb", "user","123");
-        employee = new DataSalariedEmployee();
+        employee = new DataHourlyEmployee();
+        ((DataHourlyEmployee) employee).setSalary(1200);
     }
 
     public void setInfos(DataEmployee e) {
-        e.setId(33);
-        e.setName("Joseph Garcia");
-        e.setAddress("Pakistan");
+        e.setId(34);
+        e.setName("aaaaaa");
+        e.setAddress("aaaaaaa");
     }
 
     public void setBankMethod(DataEmployee e) {
         setInfos(e);
-        e.setBank("Western Union");
-        e.setIban("WE4324234234243255");
+        e.setBank("aaaaaaaaaaaa");
+        e.setIban("AA4324234234243255");
     }
 
     public void setMailMethod(DataEmployee e) {
         setInfos(e);
-        e.setEmail("joseph.garcia@gmail.com");
+        e.setEmail("aaaaaaaa@gmail.com");
     }
 
     @Test
     public void saveEmployee() throws Exception{
-        setBankMethod(employee);
-        //db.save(employee.toEmployee());
+        setMailMethod(employee);
+        db.save(employee.toEmployee());
 
-        db.delete(2);
-        //System.out.println(db.getData(1));
+        assertTrue(employee.getId() == db.getData(employee.getId()).getEmpID());
+        db.delete(employee.getId());
     }
 }
