@@ -2,6 +2,7 @@ package be.heh.std.epm.application.data;
 
 import be.heh.std.epm.domain.Receipt;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 
 @Data
 public class DataReceipt {
+    @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @NotNull @PastOrPresent
     LocalDate date;
