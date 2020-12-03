@@ -17,6 +17,7 @@ public class OperationEmpTest {
     private OperationEmp op;
     private DataReceipt r;
     private DataTimeCard tc;
+    private LocalDate d;
 
     public void setInfos(DataEmployee e) {
         e.setId(1);
@@ -29,11 +30,12 @@ public class OperationEmpTest {
     public void setUp(){
         db = new TestPersistence();
         op = new OperationEmp(db);
+        d = LocalDate.of(2000,12,12);
         r = new DataReceipt();
         tc = new DataTimeCard();
         r.setPrice(200);
-        r.setDate(LocalDate.parse("2000-12-12"));
-        tc.setDate(LocalDate.parse("2000-12-12"));
+        r.setDate(d);
+        tc.setDate(d);
         tc.setHours(20);
     }
 
@@ -88,7 +90,7 @@ public class OperationEmpTest {
 
         op.addEmployee(emp);
         op.postTimeCard(emp.getId(), tc);
-        TimeCard t = new TimeCard(LocalDate.of(2000,12,12), 20);
+        TimeCard t = new TimeCard(d, 20);
 
         assertEquals(1, ((HourlyClassification)db.getData(emp.getId()).getPaymentClassification())
                 .getTimeCards().size());
@@ -126,7 +128,7 @@ public class OperationEmpTest {
         op.postSaleReceipt(emp.getId(), r);
 
         Employee res = db.getData(emp.getId());
-        Receipt r = new Receipt(LocalDate.of(2000,12,12), 200);
+        Receipt r = new Receipt(d, 200);
 
         assertEquals(1,((CommissionClassification)res.getPaymentClassification()).getReceipts().size());
         assertNotNull(((CommissionClassification)res.getPaymentClassification()).getReceipts().get(0));

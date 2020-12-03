@@ -21,6 +21,10 @@ public class H2Persistence extends DBPersistence {
 
     @Override
     public void save(Employee emp) throws Exception {
+
+        if(dataExists(emp.getEmpID()))
+            throw new Exception(String.format("This employee (ID: %d) already exist.", emp.getEmpID()));
+
         connect();
 
         //Query on Employees table
@@ -89,7 +93,38 @@ public class H2Persistence extends DBPersistence {
     }
 
     @Override
+    public void save(int id, Receipt receipt) throws Exception {
+
+        if(!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        if(!(getData(id).getPaymentClassification() instanceof CommissionClassification))
+            throw new Exception("This employee can't receive receipt.");
+
+        connect();
+
+
+
+        disconnect();
+    }
+
+    @Override
+    public void save(int id, TimeCard timeCard) throws Exception {
+
+        if(!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        if(!(getData(id).getPaymentClassification() instanceof HourlyClassification))
+            throw new Exception("This employee can't receive timecard.");
+
+        connect();
+        disconnect();
+    }
+
+    @Override
     public void delete(int id) throws Exception {
+
+        if(!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+
         connect();
 
         String query = "Delete from Employees where EmpId = ?;";
@@ -110,6 +145,10 @@ public class H2Persistence extends DBPersistence {
 
     @Override
     public Employee getData(int id) throws Exception {
+
+        if(!this.dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+
         DataEmployee response = null;
         connect();
         String query = String.format("SELECT type, paymentmethod FROM EMPLOYEES WHERE empid=%d", id);
@@ -151,9 +190,21 @@ public class H2Persistence extends DBPersistence {
                 break;
         }
 
-        statement =null;
+        statement = null;
         disconnect();
         return response.toEmployee();
+    }
+
+    @Override
+    public boolean dataExists(int id) throws Exception {
+        connect();
+        String query = String.format("Select * from Employees where empid = %d;", id);
+        Statement statement = getConnection().createStatement();
+        ResultSet rs = statement.executeQuery(query);
+        boolean result = (rs.next());
+        statement = null;
+        disconnect();
+        return result;
     }
 
 }

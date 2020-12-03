@@ -1,6 +1,8 @@
 package be.heh.std.epm.persistence.access;
 
 import be.heh.std.epm.domain.Employee;
+import be.heh.std.epm.domain.Receipt;
+import be.heh.std.epm.domain.TimeCard;
 import be.heh.std.epm.persistence.access.DBPersistence;
 
 import java.sql.SQLException;
@@ -17,6 +19,16 @@ public class SQLPersistence extends DBPersistence {
     }
 
     @Override
+    public void save(int id, Receipt receipt) throws Exception {
+
+    }
+
+    @Override
+    public void save(int id, TimeCard timeCard) throws Exception {
+
+    }
+
+    @Override
     public void delete(int id) throws Exception {
         //TODO
     }
@@ -30,5 +42,10 @@ public class SQLPersistence extends DBPersistence {
     public Employee getData(int id) throws Exception {
         //TODO
         return null;
+    }
+
+    @Override
+    public boolean dataExists(int id) throws Exception {
+        return false;
     }
 }

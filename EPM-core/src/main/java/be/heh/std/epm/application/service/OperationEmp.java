@@ -30,30 +30,17 @@ public class OperationEmp implements InUseCase {
     @Override
     public <T> void updateEmployee(int id, String field, T value) throws Exception {
         Employee e = out.getData(id);
+        //TODO
     }
 
     @Override
     public void postTimeCard(int id, DataTimeCard dataTimeCard) throws Exception {
-        Employee e = out.getData(id);
-        if (e.getPaymentClassification() instanceof HourlyClassification) {
-            ((HourlyClassification) e.getPaymentClassification()).addTimeCard(dataTimeCard.toTimeCard());
-            out.replace(e);
-        } else {
-            throw new Exception(String.format("The chosen employee is from %s.",
-                    e.getPaymentClassification().getClass()));
-        }
+        out.save(id, dataTimeCard.toTimeCard());
     }
 
     @Override
     public void postSaleReceipt(int id, DataReceipt dataReceipt) throws Exception {
-        Employee e = out.getData(id);
-        if (e.getPaymentClassification() instanceof CommissionClassification) {
-            ((CommissionClassification) e.getPaymentClassification()).addReceipt(dataReceipt.toReceipt());
-            out.replace(e);
-        } else {
-            throw new Exception(String.format("The chosen employee is from %s.",
-                    e.getPaymentClassification().getClass()));
-        }
+        out.save(id, dataReceipt.toReceipt());
     }
 
 }

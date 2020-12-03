@@ -40,8 +40,7 @@ public class DBPersistenceTest {
     public void saveEmployee() throws Exception{
         setMailMethod(employee);
         db.save(employee.toEmployee());
-
-        assertTrue(employee.getId() == db.getData(employee.getId()).getEmpID());
+        assertTrue(db.dataExists(employee.getId()));
         db.delete(employee.getId());
     }
 }
