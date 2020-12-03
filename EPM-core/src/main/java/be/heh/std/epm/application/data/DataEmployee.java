@@ -8,6 +8,7 @@ import lombok.Data;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Objects;
 
 @Data
@@ -22,7 +23,7 @@ public abstract class DataEmployee {
     private String email;
     @NotEmpty
     private String bank;
-    @NotEmpty
+    @NotEmpty @Pattern(regexp = "^[A-Z]{2}[0-9]{2}(?:[ ]?[0-9]{4}){4}(?:[ ]?[0-9]{1,2})?$")
     private String iban;
 
     public Employee toEmployee() throws Exception {
