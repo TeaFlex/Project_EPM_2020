@@ -3,13 +3,10 @@ package be.heh.std.epm.persistence.access;
 import be.heh.std.epm.domain.Employee;
 import be.heh.std.epm.domain.Receipt;
 import be.heh.std.epm.domain.TimeCard;
-import be.heh.std.epm.persistence.access.DBPersistence;
 
-import java.sql.SQLException;
+public class PostGreSQLPersistence extends SQLikePersistence {
 
-public class SQLPersistence extends DBPersistence {
-
-    public SQLPersistence(String server, String username, String password) {
+    public PostGreSQLPersistence(String server, String username, String password) {
         super("sql", "://", username, password);
     }
 

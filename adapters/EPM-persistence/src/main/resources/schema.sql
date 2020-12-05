@@ -1,19 +1,17 @@
 
 CREATE TABLE IF NOT EXISTS Employees(
-    EmpID INTEGER(5),
-    nameEmp VARCHAR(45) NOT NULL,
-    addressEmp VARCHAR(45) NOT NULL,
+    empID INTEGER(5),
+    name VARCHAR(45) NOT NULL,
+    address VARCHAR(45) NOT NULL,
     type VARCHAR(45) NOT NULL,
     paymentMethod VARCHAR(45) NOT NULL,
-    --paymentSchedule VARCHAR(45) NOT NULL,
-    --paymentClassification VARCHAR(45) NOT NULL,
 
     CONSTRAINT pk_EmpID PRIMARY KEY(EmpID)
 );
 
 
 CREATE TABLE IF NOT EXISTS SalariedClassification(
-    EmpID int,
+    empID int,
     salary DOUBLE,
 
     PRIMARY KEY(EmpID),
@@ -21,7 +19,7 @@ CREATE TABLE IF NOT EXISTS SalariedClassification(
 );
 
 CREATE TABLE IF NOT EXISTS CommissionClassification(
-    EmpID int,
+    empID int,
     salary DOUBLE,
     rate DOUBLE,
 
@@ -30,7 +28,7 @@ CREATE TABLE IF NOT EXISTS CommissionClassification(
 );
 
 CREATE TABLE IF NOT EXISTS HourlyClassification(
-    EmpID int,
+    empID int,
     salary DOUBLE,
 
     PRIMARY KEY(EmpID),
@@ -38,7 +36,7 @@ CREATE TABLE IF NOT EXISTS HourlyClassification(
 );
 
 CREATE TABLE IF NOT EXISTS TimeCards(
-    EmpID int,
+    empID int,
     tDate DATE ,
     hours DOUBLE,
 
@@ -47,7 +45,7 @@ CREATE TABLE IF NOT EXISTS TimeCards(
 );
 
 CREATE TABLE IF NOT EXISTS Receipts(
-    EmpID int,
+    empID int,
     tDate DATE ,
     price DOUBLE,
 
@@ -56,17 +54,17 @@ CREATE TABLE IF NOT EXISTS Receipts(
 );
 
 CREATE TABLE IF NOT EXISTS DirectDepositMethod(
-    EmpID int,
-    Iban VARCHAR(45),
-    Bank VARCHAR(45),
+    empID int,
+    iban VARCHAR(45),
+    bank VARCHAR(45),
 
     PRIMARY KEY(EmpID),
     FOREIGN KEY(EmpID) REFERENCES Employees(EmpID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS MailMethod(
-    EmpID int,
-    Email VARCHAR(45),
+    empID int,
+    email VARCHAR(45),
 
     PRIMARY KEY(EmpID),
     FOREIGN KEY(EmpID) REFERENCES Employees(EmpID) ON DELETE CASCADE

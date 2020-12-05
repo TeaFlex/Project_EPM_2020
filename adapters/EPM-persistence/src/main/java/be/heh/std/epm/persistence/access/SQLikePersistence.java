@@ -5,12 +5,12 @@ import be.heh.std.epm.application.port.out.OutPersistence;
 import java.sql.*;
 import java.util.Properties;
 
-public abstract class DBPersistence implements OutPersistence {
+public abstract class SQLikePersistence implements OutPersistence {
 
     private Connection connection;
     private String url, username, password;
 
-    public DBPersistence(String type, String path, String username, String password) {
+    public SQLikePersistence(String type, String path, String username, String password) {
         connection = null;
         url = String.format("jdbc:%s:%s", type, path);
         this.username = username;
@@ -24,7 +24,7 @@ public abstract class DBPersistence implements OutPersistence {
         }
     }
 
-    protected void disconnect() throws Exception{
+    public void disconnect() throws Exception{
         if(connection != null){
             connection.close();
             connection = null;

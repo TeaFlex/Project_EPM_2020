@@ -3,7 +3,6 @@ package be.heh.std.epm.web;
 import be.heh.std.epm.application.data.*;
 import be.heh.std.epm.application.port.out.OutPersistence;
 import be.heh.std.epm.application.service.OperationEmp;
-import be.heh.std.epm.persistence.access.DBPersistence;
 import be.heh.std.epm.persistence.access.H2Persistence;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -11,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.xml.crypto.Data;
 
 @RestController
 public class EmployeeController {

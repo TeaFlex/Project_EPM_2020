@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class DBPersistenceTest {
+public class SQLikePersistenceTest {
 
     private OutPersistence db;
     private DataEmployee employee;

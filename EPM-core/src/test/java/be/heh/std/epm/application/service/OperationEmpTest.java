@@ -1,18 +1,17 @@
 package be.heh.std.epm.application.service;
 
-import be.heh.std.epm.application.adapter.TestPersistence;
+import be.heh.std.epm.application.adapter.ListPersistence;
 import be.heh.std.epm.application.data.*;
 import be.heh.std.epm.domain.*;
 import org.junit.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class OperationEmpTest {
 
-    private TestPersistence db;
+    private ListPersistence db;
     private DataEmployee emp;
     private OperationEmp op;
     private DataReceipt r;
@@ -28,7 +27,7 @@ public class OperationEmpTest {
 
     @Before
     public void setUp(){
-        db = new TestPersistence();
+        db = new ListPersistence();
         op = new OperationEmp(db);
         d = LocalDate.of(2000,12,12);
         r = new DataReceipt();

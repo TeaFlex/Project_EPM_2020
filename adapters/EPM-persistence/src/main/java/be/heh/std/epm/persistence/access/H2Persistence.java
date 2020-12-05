@@ -5,15 +5,12 @@ import be.heh.std.epm.application.data.DataEmployee;
 import be.heh.std.epm.application.data.DataHourlyEmployee;
 import be.heh.std.epm.application.data.DataSalariedEmployee;
 import be.heh.std.epm.domain.*;
-import be.heh.std.epm.persistence.access.DBPersistence;
 
-import javax.swing.plaf.nimbus.State;
-import java.lang.reflect.Constructor;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class H2Persistence extends DBPersistence {
+public class H2Persistence extends SQLikePersistence {
 
     public H2Persistence (String server, String username, String password) {
         super("h2", String.format("%s;AUTO_SERVER=TRUE", server), username, password);
@@ -30,7 +27,7 @@ public class H2Persistence extends DBPersistence {
         //Query on Employees table
 
         String query = "insert into EMPLOYEES " +
-                "(EmpID, NameEmp, AddressEmp, type, PaymentMethod) " +
+                "(empID, name, address, type, PaymentMethod) " +
                 "VALUES (?, ?, ?, ?, ?);";
         String type = emp.getPaymentClassification().getClass().getSimpleName();
         String method = emp.getPaymentMethod().getClass().getSimpleName();
@@ -47,12 +44,12 @@ public class H2Persistence extends DBPersistence {
 
         //Query on any Classification table
 
-        query = String.format("insert into %s (EmpID, salary)" +
+        query = String.format("insert into %s (empid, salary)" +
                 "VALUES (?, ?);", type);
         prep = getConnection().prepareStatement(query);
 
         if(type.equals("CommissionClassification")) {
-            query = String.format("insert into %s (EmpID, salary, rate)" +
+            query = String.format("insert into %s (empid, salary, rate)" +
                     "VALUES (?, ?, ?);", type);
             prep = getConnection().prepareStatement(query);
             double rate = ((CommissionClassification) emp.getPaymentClassification()).getCommissionRate();
@@ -66,10 +63,10 @@ public class H2Persistence extends DBPersistence {
 
         //Query on any Method table
 
-        query = String.format("insert into %s (EmpID, ", method);
+        query = String.format("insert into %s (empid, ", method);
 
         if(method.equals("DirectDepositMethod")) {
-            query += "Iban, Bank) VALUES (?, ?, ?);";
+            query += "iban, bank) VALUES (?, ?, ?);";
             prep = getConnection().prepareStatement(query);
             prep.setInt(1, emp.getEmpID());
             String[] infos = {
@@ -127,7 +124,7 @@ public class H2Persistence extends DBPersistence {
 
         connect();
 
-        String query = "Delete from Employees where EmpId = ?;";
+        String query = "Delete from Employees where empid = ?;";
 
         PreparedStatement prep = getConnection().prepareStatement(query);
 
@@ -171,14 +168,14 @@ public class H2Persistence extends DBPersistence {
                 break;
         }
 
-        query = String.format("SELECT E.nameemp, E.addressemp, T.*, G.* from EMPLOYEES E, " +
+        query = String.format("SELECT E.name, E.address, T.*, G.* from EMPLOYEES E, " +
                 "%s T, %s G WHERE E.empid=%d AND T.empid = E.empid AND G.empid = E.empid;", type, method, id);
         rs = statement.executeQuery(query);
         rs.next();
 
         response.setId(rs.getInt("empid"));
-        response.setName(rs.getString("nameemp"));
-        response.setAddress(rs.getString("addressemp"));
+        response.setName(rs.getString("name"));
+        response.setAddress(rs.getString("address"));
 
         switch (method.replace("Method", "")) {
             case "Mail":

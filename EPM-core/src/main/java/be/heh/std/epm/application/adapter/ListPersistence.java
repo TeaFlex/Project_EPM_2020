@@ -7,7 +7,7 @@ import be.heh.std.epm.domain.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TestPersistence implements OutPersistence {
+public class ListPersistence implements OutPersistence {
 
     //"database" for tests
     private HashMap<Integer, Employee> database = new HashMap<>();
