@@ -14,7 +14,11 @@ public class SQLikePersistenceTest {
 
     @Before
     public void setup() {
-        db = new H2Persistence("file:./h2DBs/mydb", "user","123");
+        try{
+            db = new H2Persistence();
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         employee = new DataHourlyEmployee();
         ((DataHourlyEmployee) employee).setSalary(1200);
     }
@@ -41,6 +45,5 @@ public class SQLikePersistenceTest {
         setMailMethod(employee);
         db.save(employee.toEmployee());
         assertTrue(db.dataExists(employee.getId()));
-        db.delete(employee.getId());
     }
 }
