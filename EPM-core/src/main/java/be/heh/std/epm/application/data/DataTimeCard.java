@@ -14,11 +14,11 @@ public class DataTimeCard {
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @NotNull @PastOrPresent
-    LocalDate date;
+    String date;
     @NotNull
     double hours;
 
     public TimeCard toTimeCard() {
-        return new TimeCard(date, hours);
+        return new TimeCard(LocalDate.parse(date), hours);
     }
 }

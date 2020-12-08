@@ -14,11 +14,11 @@ public class DataReceipt {
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @NotNull @PastOrPresent
-    LocalDate date;
+    String date;
     @NotNull
     double price;
 
     public Receipt toReceipt() {
-        return new Receipt(date, price);
+        return new Receipt(LocalDate.parse(date), price);
     }
 }

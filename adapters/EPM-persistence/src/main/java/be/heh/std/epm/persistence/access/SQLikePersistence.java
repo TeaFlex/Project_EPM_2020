@@ -18,21 +18,22 @@ public abstract class SQLikePersistence implements OutPersistence {
     }
 
     protected void connect() throws Exception {
-        if(connection == null) {
+        if(!isConnected()) {
             connection = DriverManager.getConnection(this.url, this.username, this.password);
             System.out.printf("Connected to %s as %s.%n", url, username);
         }
     }
 
     public void disconnect() throws Exception{
-        if(connection != null){
+        if(isConnected()) {
             connection.close();
             connection = null;
             System.out.printf("Disconnected from %s.%n", url);
         }
     }
 
-    protected Connection getConnection() {
+    protected Connection getConnection() throws Exception{
+        connect();
         return connection;
     }
 

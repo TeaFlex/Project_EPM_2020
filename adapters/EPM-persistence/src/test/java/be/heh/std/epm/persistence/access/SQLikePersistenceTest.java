@@ -14,7 +14,7 @@ public class SQLikePersistenceTest {
 
     @Before
     public void setup() {
-        db = new H2Persistence("file:~/h2DBs/mydb", "user","123");
+        db = new H2Persistence("file:./h2DBs/mydb", "user","123");
         employee = new DataHourlyEmployee();
         ((DataHourlyEmployee) employee).setSalary(1200);
     }

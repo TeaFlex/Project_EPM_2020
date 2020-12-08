@@ -9,6 +9,8 @@ import be.heh.std.epm.domain.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Date;
+import java.time.temporal.ChronoField;
 
 public class H2Persistence extends SQLikePersistence {
 
@@ -22,7 +24,6 @@ public class H2Persistence extends SQLikePersistence {
         if(dataExists(emp.getEmpID()))
             throw new Exception(String.format("This employee (ID: %d) already exist.", emp.getEmpID()));
 
-        connect();
 
         //Query on Employees table
 
@@ -85,8 +86,6 @@ public class H2Persistence extends SQLikePersistence {
         }
 
         rowsAffected = prep.executeUpdate();
-
-        disconnect();
     }
 
     @Override
@@ -97,11 +96,17 @@ public class H2Persistence extends SQLikePersistence {
         if(!(getData(id).getPaymentClassification() instanceof CommissionClassification))
             throw new Exception("This employee can't receive receipt.");
 
-        connect();
 
+        String query = "Insert into Receipts (empid, tdate, price) VALUES (?, ?, ?);";
+        PreparedStatement prep = getConnection().prepareStatement(query);
+        Date date = Date.valueOf(receipt.getDate());
 
+        prep.setInt(1, id);
+        prep.setDate(2, date);
+        prep.setDouble(3, receipt.getPrice());
 
-        disconnect();
+        int rowsAffected = prep.executeUpdate();
+
     }
 
     @Override
@@ -112,8 +117,15 @@ public class H2Persistence extends SQLikePersistence {
         if(!(getData(id).getPaymentClassification() instanceof HourlyClassification))
             throw new Exception("This employee can't receive timecard.");
 
-        connect();
-        disconnect();
+        String query = "Insert into Timecards (empid, tdate, hours) VALUES (?, ?, ?);";
+        PreparedStatement prep = getConnection().prepareStatement(query);
+        Date date = Date.valueOf(timeCard.getDate());
+
+        prep.setInt(1, id);
+        prep.setDate(2, date);
+        prep.setDouble(3, timeCard.getHours());
+
+        int rowsAffected = prep.executeUpdate();
     }
 
     @Override
@@ -121,8 +133,6 @@ public class H2Persistence extends SQLikePersistence {
 
         if(!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
-
-        connect();
 
         String query = "Delete from Employees where empid = ?;";
 
@@ -132,7 +142,6 @@ public class H2Persistence extends SQLikePersistence {
 
         int r = prep.executeUpdate();
 
-        disconnect();
     }
 
     @Override
@@ -147,7 +156,6 @@ public class H2Persistence extends SQLikePersistence {
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
 
         DataEmployee response = null;
-        connect();
         String query = String.format("SELECT type, paymentmethod FROM EMPLOYEES WHERE empid=%d", id);
         Statement statement = getConnection().createStatement();
 
@@ -188,19 +196,16 @@ public class H2Persistence extends SQLikePersistence {
         }
 
         statement = null;
-        disconnect();
         return response.toEmployee();
     }
 
     @Override
     public boolean dataExists(int id) throws Exception {
-        connect();
         String query = String.format("Select * from Employees where empid = %d;", id);
         Statement statement = getConnection().createStatement();
         ResultSet rs = statement.executeQuery(query);
         boolean result = (rs.next());
         statement = null;
-        disconnect();
         return result;
     }
 
