@@ -28,12 +28,6 @@ public class OperationEmp implements InUseCase {
     }
 
     @Override
-    public <T> void updateEmployee(int id, String field, T value) throws Exception {
-        Employee e = out.getData(id);
-        //TODO
-    }
-
-    @Override
     public void postTimeCard(int id, DataTimeCard dataTimeCard) throws Exception {
         out.save(id, dataTimeCard.toTimeCard());
     }
@@ -41,6 +35,41 @@ public class OperationEmp implements InUseCase {
     @Override
     public void postSaleReceipt(int id, DataReceipt dataReceipt) throws Exception {
         out.save(id, dataReceipt.toReceipt());
+    }
+
+    @Override
+    public void updateName(int id, String newName) throws Exception {
+
+    }
+
+    @Override
+    public void updateAddress(int id, String newAddress) throws Exception {
+
+    }
+
+    @Override
+    public void updateToHourly(int id, double rate) throws Exception {
+
+    }
+
+    @Override
+    public void updateToSalaried(int id, double salary) throws Exception {
+
+    }
+
+    @Override
+    public void updateToCommissioned(int id, double salary, double commissionRate) throws Exception {
+
+    }
+
+    @Override
+    public void updateToDirectDepositMethod(int id, String bank, String iban) throws Exception {
+
+    }
+
+    @Override
+    public void updateToMailMethod(int id, String email) throws Exception {
+
     }
 
 }

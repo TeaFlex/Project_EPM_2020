@@ -74,14 +74,8 @@ public class EmployeeController {
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PostMapping(value = "/timecard", consumes =  MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<String> addTimeCard(@RequestBody String body) {
-        JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
-        if (!jsonObject.has("employeeID") || !jsonObject.has("timecard")) {
-            return new ErrorResponseEntity("Malformed data in request body.");
-        }
-        int id = jsonObject.get("employeeID").getAsInt();
-        DataTimeCard dataTimeCard = gson.fromJson(jsonObject.get("timecard"), DataTimeCard.class);
+    @PostMapping(value = "/timecard/{id}", consumes =  MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<String> addTimeCard(@PathVariable int id, @RequestBody DataTimeCard dataTimeCard) {
         try {
             operationEmp.postTimeCard(id, dataTimeCard);
         } catch (Exception e) {
@@ -91,14 +85,8 @@ public class EmployeeController {
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PostMapping(value = "/salesreceipt", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<String> addSalesReceipt(@RequestBody String body) {
-        JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
-        if (!jsonObject.has("employeeID") || !jsonObject.has("salesreceipt")) {
-            return new ErrorResponseEntity("Malformed data in request body.");
-        }
-        int id = jsonObject.get("employeeID").getAsInt();
-        DataReceipt dataReceipt = gson.fromJson(jsonObject.get("salesreceipt"), DataReceipt.class);
+    @PostMapping(value = "/salesreceipt/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<String> addSalesReceipt(@PathVariable int id, @RequestBody DataReceipt dataReceipt) {
         try {
             operationEmp.postSaleReceipt(id, dataReceipt);
         } catch (Exception e) {
