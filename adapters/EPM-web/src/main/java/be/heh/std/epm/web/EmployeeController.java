@@ -56,6 +56,7 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @DeleteMapping(value = "/employees/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> removeEmployee(@PathVariable int id) {
         try {
@@ -65,13 +66,14 @@ public class EmployeeController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
-
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PutMapping(value = "/employees/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> updateEmployee(@PathVariable int id, @RequestBody String body) {
         //TODO
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(value = "/timecard", consumes =  MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> addTimeCard(@RequestBody String body) {
         JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
@@ -88,6 +90,7 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(value = "/salesreceipt", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> addSalesReceipt(@RequestBody String body) {
         JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
