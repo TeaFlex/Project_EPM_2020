@@ -1,8 +1,6 @@
 package be.heh.std.epm.application.data;
 
-import be.heh.std.epm.domain.DirectDepositMethod;
-import be.heh.std.epm.domain.Employee;
-import be.heh.std.epm.domain.MailMethod;
+import be.heh.std.epm.domain.*;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -25,6 +23,23 @@ public abstract class DataEmployee {
     private String bank;
     @NotEmpty @Pattern(regexp = "^[A-Z]{2}[0-9]{2}(?:[ ]?[0-9]{4}){4}(?:[ ]?[0-9]{1,2})?$")
     private String iban;
+
+    public DataEmployee(Employee employee) {
+        id = employee.getEmpID();
+        name = employee.getName();
+        address = employee.getAddress();
+        PaymentMethod paymentMethod = employee.getPaymentMethod();
+        if (paymentMethod instanceof MailMethod) {
+            email = ((MailMethod) paymentMethod).getEmail();
+        } else if (paymentMethod instanceof DirectDepositMethod) {
+            bank = ((DirectDepositMethod) paymentMethod).getBank();
+            iban = ((DirectDepositMethod) paymentMethod).getIban();
+        }
+    }
+
+    public DataEmployee() {
+
+    }
 
     public Employee toEmployee() throws Exception {
         Employee employee = new Employee(id, name, address);

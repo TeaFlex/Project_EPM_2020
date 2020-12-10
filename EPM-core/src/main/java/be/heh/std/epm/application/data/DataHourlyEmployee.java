@@ -1,17 +1,27 @@
 package be.heh.std.epm.application.data;
 
-import be.heh.std.epm.domain.Employee;
-import be.heh.std.epm.domain.HourlyClassification;
-import be.heh.std.epm.domain.WeeklyPaymentSchedule;
-import lombok.Getter;
-import lombok.Setter;
+import be.heh.std.epm.domain.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
 
+@Data @EqualsAndHashCode(callSuper = false)
 public class DataHourlyEmployee extends DataEmployee {
 
-    @Getter @Setter @NotNull
+    @NotNull
     private float salary;
+
+    public DataHourlyEmployee(Employee employee) {
+        super(employee);
+        if (!(employee.getPaymentClassification() instanceof HourlyClassification && employee.getPaymentSchedule() instanceof WeeklyPaymentSchedule)) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public DataHourlyEmployee() {
+
+    }
 
     @Override
     public Employee toEmployee() throws Exception {
