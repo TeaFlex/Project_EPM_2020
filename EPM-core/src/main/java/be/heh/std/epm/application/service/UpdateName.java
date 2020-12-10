@@ -4,13 +4,13 @@ import be.heh.std.epm.application.port.out.OutPersistence;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UpdateName extends UpdateEmployee {
 
-    @NotNull
+    @NotEmpty
     String newName;
 
     @Override

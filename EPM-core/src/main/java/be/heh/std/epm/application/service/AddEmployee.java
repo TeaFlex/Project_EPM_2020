@@ -12,9 +12,9 @@ public abstract class AddEmployee implements Operation {
 
     @NotNull
     int id;
-    @NotNull @NotEmpty
+    @NotEmpty
     String name;
-    @NotNull @NotEmpty
+    @NotEmpty
     String address;
     @NotEmpty @Email
     String email;

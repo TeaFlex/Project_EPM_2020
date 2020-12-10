@@ -5,13 +5,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UpdateToMailMethod extends UpdateEmployee {
 
-    @NotNull @Email
+    @NotEmpty @Email
     String email;
 
     @Override
