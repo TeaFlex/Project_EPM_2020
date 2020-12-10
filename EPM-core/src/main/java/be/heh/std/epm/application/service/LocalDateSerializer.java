@@ -1,4 +1,4 @@
-package be.heh.std.epm.application.data;
+package be.heh.std.epm.application.service;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

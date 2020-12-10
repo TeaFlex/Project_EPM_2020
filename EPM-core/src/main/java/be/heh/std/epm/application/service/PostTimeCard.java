@@ -1,8 +1,7 @@
-package be.heh.std.epm.application.data;
+package be.heh.std.epm.application.service;
 
-import be.heh.std.epm.application.service.LocalDateDeserializer;
-import be.heh.std.epm.application.service.LocalDateSerializer;
-import be.heh.std.epm.domain.Receipt;
+import be.heh.std.epm.application.port.out.OutPersistence;
+import be.heh.std.epm.domain.TimeCard;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
@@ -12,15 +11,19 @@ import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @Data
-public class DataReceipt {
+public class PostTimeCard implements Operation {
+
+    @NotNull
+    int id;
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @NotNull @PastOrPresent
     LocalDate date;
     @NotNull
-    double price;
+    double hours;
 
-    public Receipt toReceipt() {
-        return new Receipt(date, price);
+    @Override
+    public void execute(OutPersistence outPersistence) throws Exception {
+        outPersistence.saveTimeCard(id, new TimeCard(date, hours));
     }
 }

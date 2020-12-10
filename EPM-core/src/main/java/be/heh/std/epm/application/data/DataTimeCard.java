@@ -1,5 +1,7 @@
 package be.heh.std.epm.application.data;
 
+import be.heh.std.epm.application.service.LocalDateDeserializer;
+import be.heh.std.epm.application.service.LocalDateSerializer;
 import be.heh.std.epm.domain.TimeCard;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
