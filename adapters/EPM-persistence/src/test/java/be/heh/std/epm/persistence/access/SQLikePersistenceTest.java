@@ -21,23 +21,41 @@ public class SQLikePersistenceTest {
             System.out.println(e.getMessage());
         }
         employee = new Employee(1, "test", "test");
+
+    }
+
+    public void setBankMethod() {
+        employee.setPaymentMethod(new DirectDepositMethod("Belfius", "BE23455677788"));
+    }
+
+    public void setMailMethod() {
+        employee.setPaymentMethod(new MailMethod("test@test.test"));
+    }
+
+    public void setBasicInfos() {
         employee.setPaymentClassification(new SalariedClassification(1234));
-        employee.setPaymentSchedule(new MonthlyPaymentSchedule());
-    }
-
-    public void setBankMethod(Employee e) {
-        e.setPaymentMethod(new DirectDepositMethod("Belfius", "BE23455677788"));
-    }
-
-    public void setMailMethod(Employee e) {
-        e.setPaymentMethod(new MailMethod("test@test.test"));
+        employee.setPaymentSchedule(new WeeklyPaymentSchedule());
     }
 
     @Test
     public void saveEmployee() throws Exception{
-        setBankMethod(employee);
+        setBasicInfos();
+        setBankMethod();
         db.saveEmployee(employee);
         assertTrue(db.dataExists(employee.getEmpID()));
         assertEquals(employee, db.getData(employee.getEmpID()));
+
+        setMailMethod();
+        employee.setEmpID(2);
+        db.saveEmployee(employee);
+        assertTrue(db.dataExists(employee.getEmpID()));
+        assertEquals(employee, db.getData(employee.getEmpID()));
+    }
+
+    @Test(expected = Exception.class)
+    public void badSaveEmployee() throws Exception {
+        setBankMethod();
+        db.saveEmployee(employee);
+        db.saveEmployee(employee);
     }
 }

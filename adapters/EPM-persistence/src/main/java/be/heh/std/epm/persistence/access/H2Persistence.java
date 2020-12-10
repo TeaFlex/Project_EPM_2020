@@ -34,10 +34,11 @@ public class H2Persistence extends SQLikePersistence {
         //Query on Employees table
 
         String query = "insert into EMPLOYEES " +
-                "(empID, name, address, type, PaymentMethod) " +
-                "VALUES (?, ?, ?, ?, ?);";
+                "(empID, name, address, paymentClassification, paymentSchedule, PaymentMethod) " +
+                "VALUES (?, ?, ?, ?, ?, ?);";
         String type = emp.getPaymentClassification().getClass().getSimpleName();
         String method = emp.getPaymentMethod().getClass().getSimpleName();
+        String schedule = emp.getPaymentSchedule().getClass().getSimpleName();
 
         PreparedStatement prep = getConnection().prepareStatement(query);
 
@@ -45,7 +46,8 @@ public class H2Persistence extends SQLikePersistence {
         prep.setString(2, emp.getName());
         prep.setString(3, emp.getAddress());
         prep.setString(4, type);
-        prep.setString(5, method);
+        prep.setString(5, schedule);
+        prep.setString(6, method);
 
         int rowsAffected = prep.executeUpdate();
 
@@ -165,13 +167,14 @@ public class H2Persistence extends SQLikePersistence {
         PaymentClassification paymentClassification = null;
         PaymentMethod paymentMethod = null;
 
-        String query = String.format("SELECT type, paymentmethod FROM EMPLOYEES WHERE empid=%d", id);
+        String query = String.format("SELECT paymentClassification, paymentMethod, paymentSchedule FROM EMPLOYEES WHERE empid=%d", id);
         Statement statement = getConnection().createStatement();
 
         ResultSet rs = statement.executeQuery(query);
         rs.next();
-        String type = rs.getString("type");
+        String type = rs.getString("paymentClassification");
         String method = rs.getString("paymentMethod");
+        String schedule = rs.getString("paymentSchedule");
 
         query = String.format("SELECT E.name, E.address, T.*, G.* from EMPLOYEES E, " +
                 "%s T, %s G WHERE E.empid=%d AND T.empid = E.empid AND G.empid = E.empid;", type, method, id);
@@ -187,15 +190,24 @@ public class H2Persistence extends SQLikePersistence {
         switch (type.replace("Classification", "")) {
             case "Salaried":
                 paymentClassification = new SalariedClassification(p);
-                paymentSchedule = new MonthlyPaymentSchedule();
                 break;
             case "Commission":
                 paymentClassification = new CommissionClassification(p, rs.getDouble("rate"));
-                paymentSchedule = new BiweeklyPaymentSchedule();
                 break;
             case "Hourly":
                 paymentClassification = new HourlyClassification(p);
+                break;
+        }
+
+        switch (schedule.replace("PaymentSchedule", "")) {
+            case "Monthly":
+                paymentSchedule = new MonthlyPaymentSchedule();
+                break;
+            case "Weekly":
                 paymentSchedule = new WeeklyPaymentSchedule();
+                break;
+            case "Biweekly":
+                paymentSchedule = new BiweeklyPaymentSchedule();
                 break;
         }
 

@@ -1,9 +1,10 @@
 
 CREATE TABLE IF NOT EXISTS Employees(
-    empID INTEGER(5),
+    empID INTEGER(5) AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
     address VARCHAR(45) NOT NULL,
-    type VARCHAR(45) NOT NULL,
+    paymentClassification VARCHAR(45) NOT NULL,
+    paymentSchedule VARCHAR(45) NOT NULL,
     paymentMethod VARCHAR(45) NOT NULL,
 
     CONSTRAINT pk_EmpID PRIMARY KEY(EmpID)
