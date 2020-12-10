@@ -1,15 +1,14 @@
 package be.heh.std.epm.domain;
 
-import lombok.Getter;
+import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Value
 public class HourlyClassification implements PaymentClassification {
 
-    @Getter
     private double salary;
-    @Getter
     private List<TimeCard> timeCards;
 
     public HourlyClassification(double salary) {

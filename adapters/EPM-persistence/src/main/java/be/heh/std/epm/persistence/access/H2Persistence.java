@@ -1,13 +1,12 @@
 package be.heh.std.epm.persistence.access;
 
-import be.heh.std.epm.application.data.DataCommissionEmployee;
-import be.heh.std.epm.application.data.DataEmployee;
-import be.heh.std.epm.application.data.DataHourlyEmployee;
-import be.heh.std.epm.application.data.DataSalariedEmployee;
 import be.heh.std.epm.domain.*;
 
 import java.io.File;
-import java.sql.*;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class H2Persistence extends SQLikePersistence {
 
@@ -162,7 +161,10 @@ public class H2Persistence extends SQLikePersistence {
         if(!this.dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
 
-        DataEmployee response = null;
+        PaymentSchedule paymentSchedule = null;
+        PaymentClassification paymentClassification = null;
+        PaymentMethod paymentMethod = null;
+
         String query = String.format("SELECT type, paymentmethod FROM EMPLOYEES WHERE empid=%d", id);
         Statement statement = getConnection().createStatement();
 
@@ -171,39 +173,50 @@ public class H2Persistence extends SQLikePersistence {
         String type = rs.getString("type");
         String method = rs.getString("paymentMethod");
 
-        switch (type.replace("Classification", "")) {
-            case "Salaried":
-                response = new DataSalariedEmployee();
-                break;
-            case "Commission":
-                response = new DataCommissionEmployee();
-                break;
-            case "Hourly":
-                response = new DataHourlyEmployee();
-                break;
-        }
-
         query = String.format("SELECT E.name, E.address, T.*, G.* from EMPLOYEES E, " +
                 "%s T, %s G WHERE E.empid=%d AND T.empid = E.empid AND G.empid = E.empid;", type, method, id);
         rs = statement.executeQuery(query);
         rs.next();
 
-        response.setId(rs.getInt("empid"));
-        response.setName(rs.getString("name"));
-        response.setAddress(rs.getString("address"));
+        Employee response = new Employee(rs.getInt("empid"),
+                rs.getString("name"),
+                rs.getString("address"));
 
-        switch (method.replace("Method", "")) {
-            case "Mail":
-                response.setEmail(rs.getString("email"));
+        double p = rs.getDouble("salary");
+
+        switch (type.replace("Classification", "")) {
+            case "Salaried":
+                paymentClassification = new SalariedClassification(p);
+                paymentSchedule = new MonthlyPaymentSchedule();
                 break;
-            case "DirectDeposit":
-                response.setIban(rs.getString("iban"));
-                response.setBank(rs.getString("bank"));
+            case "Commission":
+                paymentClassification = new CommissionClassification(p, rs.getDouble("rate"));
+                paymentSchedule = new BiweeklyPaymentSchedule();
+                break;
+            case "Hourly":
+                paymentClassification = new HourlyClassification(p);
+                paymentSchedule = new WeeklyPaymentSchedule();
                 break;
         }
 
+        //TODO: faire une query qui prend toutes les timecard/Receipts et les rajoute à la collection de l'objet
+
+        switch (method.replace("Method", "")) {
+            case "Mail":
+                paymentMethod = new MailMethod(rs.getString("email"));
+                break;
+            case "DirectDeposit":
+                paymentMethod = new DirectDepositMethod(rs.getString("iban"),
+                        rs.getString("bank"));
+                break;
+        }
+
+        response.setPaymentClassification(paymentClassification);
+        response.setPaymentMethod(paymentMethod);
+        response.setPaymentSchedule(paymentSchedule);
+
         statement = null;
-        return response.toEmployee();
+        return response;
     }
 
     @Override

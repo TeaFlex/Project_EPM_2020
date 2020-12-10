@@ -1,10 +1,10 @@
 package be.heh.std.epm.domain;
 
-import lombok.Getter;
+import lombok.Value;
 
+@Value
 public class MailMethod implements PaymentMethod {
 
-    @Getter
     private String email;
 
     public MailMethod(String email) {
@@ -12,7 +12,7 @@ public class MailMethod implements PaymentMethod {
     }
 
     @Override
-    public String toString() {
+    public String getMethodInfos() {
         return String.format("mail : %s", email);
     }
 }
