@@ -5,9 +5,9 @@ import be.heh.std.epm.domain.Receipt;
 import be.heh.std.epm.domain.TimeCard;
 
 public interface OutPersistence {
-    void save(Employee emp) throws Exception;
-    void save(int id, Receipt receipt) throws Exception;
-    void save(int id, TimeCard timeCard) throws Exception;
+    void saveEmployee(Employee emp) throws Exception;
+    void saveReceipt(int id, Receipt receipt) throws Exception;
+    void saveTimeCard(int id, TimeCard timeCard) throws Exception;
     void delete(int id) throws Exception;
     void replace(Employee emp) throws Exception;
     Employee getData(int id) throws Exception;

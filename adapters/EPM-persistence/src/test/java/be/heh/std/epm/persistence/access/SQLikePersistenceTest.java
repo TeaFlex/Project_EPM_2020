@@ -43,7 +43,7 @@ public class SQLikePersistenceTest {
     @Test
     public void saveEmployee() throws Exception{
         setMailMethod(employee);
-        db.save(employee.toEmployee());
+        db.saveEmployee(employee.toEmployee());
         assertTrue(db.dataExists(employee.getId()));
     }
 }

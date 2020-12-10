@@ -5,9 +5,6 @@ import be.heh.std.epm.application.data.DataReceipt;
 import be.heh.std.epm.application.data.DataTimeCard;
 import be.heh.std.epm.application.port.in.InUseCase;
 import be.heh.std.epm.application.port.out.OutPersistence;
-import be.heh.std.epm.domain.*;
-
-import java.time.LocalDate;
 
 public class OperationEmp implements InUseCase {
 
@@ -19,7 +16,7 @@ public class OperationEmp implements InUseCase {
 
     @Override
     public void addEmployee(DataEmployee dataEmployee) throws Exception {
-        this.out.save(dataEmployee.toEmployee());
+        this.out.saveEmployee(dataEmployee.toEmployee());
     }
 
     @Override
@@ -29,12 +26,12 @@ public class OperationEmp implements InUseCase {
 
     @Override
     public void postTimeCard(int id, DataTimeCard dataTimeCard) throws Exception {
-        out.save(id, dataTimeCard.toTimeCard());
+        out.saveTimeCard(id, dataTimeCard.toTimeCard());
     }
 
     @Override
     public void postSaleReceipt(int id, DataReceipt dataReceipt) throws Exception {
-        out.save(id, dataReceipt.toReceipt());
+        out.saveReceipt(id, dataReceipt.toReceipt());
     }
 
     @Override

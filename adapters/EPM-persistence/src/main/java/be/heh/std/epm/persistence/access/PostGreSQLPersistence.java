@@ -11,17 +11,17 @@ public class PostGreSQLPersistence extends SQLikePersistence {
     }
 
     @Override
-    public void save(Employee emp) throws Exception {
+    public void saveEmployee(Employee emp) throws Exception {
         //TODO
     }
 
     @Override
-    public void save(int id, Receipt receipt) throws Exception {
+    public void saveReceipt(int id, Receipt receipt) throws Exception {
 
     }
 
     @Override
-    public void save(int id, TimeCard timeCard) throws Exception {
+    public void saveTimeCard(int id, TimeCard timeCard) throws Exception {
 
     }
 

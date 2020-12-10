@@ -26,7 +26,7 @@ public class H2Persistence extends SQLikePersistence {
     }
 
     @Override
-    public void save(Employee emp) throws Exception {
+    public void saveEmployee(Employee emp) throws Exception {
 
         if(dataExists(emp.getEmpID()))
             throw new Exception(String.format("This employee (ID: %d) already exist.", emp.getEmpID()));
@@ -96,7 +96,7 @@ public class H2Persistence extends SQLikePersistence {
     }
 
     @Override
-    public void save(int id, Receipt receipt) throws Exception {
+    public void saveReceipt(int id, Receipt receipt) throws Exception {
 
         if(!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
@@ -117,7 +117,7 @@ public class H2Persistence extends SQLikePersistence {
     }
 
     @Override
-    public void save(int id, TimeCard timeCard) throws Exception {
+    public void saveTimeCard(int id, TimeCard timeCard) throws Exception {
 
         if(!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));

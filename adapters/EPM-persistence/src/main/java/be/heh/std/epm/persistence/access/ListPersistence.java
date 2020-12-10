@@ -11,14 +11,14 @@ public class ListPersistence implements OutPersistence {
     private HashMap<Integer, Employee> database = new HashMap<>();
 
     @Override
-    public void save(Employee emp) throws Exception {
+    public void saveEmployee(Employee emp) throws Exception {
         if(database.containsKey(emp.getEmpID()))
             throw new Exception(String.format("This employee (ID:%d) already exists.", emp.getEmpID()));
         database.put(emp.getEmpID(), emp);
     }
 
     @Override
-    public void save(int id, Receipt receipt) throws Exception {
+    public void saveReceipt(int id, Receipt receipt) throws Exception {
         if(!database.containsKey(id))
             throw new Exception("This employee doesn't exist.");
         if(!(database.get(id).getPaymentClassification() instanceof CommissionClassification))
@@ -27,7 +27,7 @@ public class ListPersistence implements OutPersistence {
     }
 
     @Override
-    public void save(int id, TimeCard timeCard) throws Exception {
+    public void saveTimeCard(int id, TimeCard timeCard) throws Exception {
         if(!database.containsKey(id))
             throw new Exception("This employee doesn't exist.");
         if(!(database.get(id).getPaymentClassification() instanceof HourlyClassification))
