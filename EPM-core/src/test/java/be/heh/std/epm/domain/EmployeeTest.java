@@ -34,7 +34,7 @@ public class EmployeeTest {
         assertTrue(ps instanceof MonthlyPaymentSchedule);
 
         PaymentMethod pm = employee.getPaymentMethod();
-        assertEquals("direct deposit into ING : be80-4444-444", pm.toString());
+        assertEquals("DirectDepositMethod(bank=ING, iban=be80-4444-444)", pm.toString());
 
     }
 
@@ -63,7 +63,7 @@ public class EmployeeTest {
         assertTrue(ps instanceof WeeklyPaymentSchedule);
 
         PaymentMethod pm = employee.getPaymentMethod();
-        assertEquals("mail : toto@gmail.com", pm.toString());
+        assertEquals("MailMethod(email=toto@gmail.com)", pm.toString());
     }
 
     @Test

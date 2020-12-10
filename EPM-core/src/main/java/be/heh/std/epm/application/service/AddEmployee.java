@@ -1,11 +1,16 @@
 package be.heh.std.epm.application.service;
 
+import be.heh.std.epm.domain.DirectDepositMethod;
+import be.heh.std.epm.domain.Employee;
+import be.heh.std.epm.domain.MailMethod;
+import be.heh.std.epm.domain.PaymentMethod;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Objects;
 
 @Data
 @ValidPaymentMethod
@@ -23,4 +28,13 @@ public abstract class AddEmployee implements Operation {
     @Pattern(regexp = "^[A-Z]{2}[0-9]{2}(?:[ ]?[0-9]{4}){4}(?:[ ]?[0-9]{1,2})?$")
     String iban;
 
+    protected PaymentMethod getPayementMethod() throws Exception{
+        if (!Objects.isNull(email)) {
+            return new MailMethod(email);
+        } else if (!Objects.isNull(bank) && !Objects.isNull(iban)) {
+            return new DirectDepositMethod(bank, iban);
+        } else {
+            throw new Exception("Payment method information is either missing or incomplete.");
+        }
+    }
 }
