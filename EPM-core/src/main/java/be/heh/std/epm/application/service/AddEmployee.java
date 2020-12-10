@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Data
+@ValidPaymentMethod
 public abstract class AddEmployee implements Operation {
 
     @NotNull
@@ -16,11 +17,10 @@ public abstract class AddEmployee implements Operation {
     String name;
     @NotEmpty
     String address;
-    @NotEmpty @Email
+    @Email
     String email;
-    @NotEmpty
     String bank;
-    @NotEmpty @Pattern(regexp = "^[A-Z]{2}[0-9]{2}(?:[ ]?[0-9]{4}){4}(?:[ ]?[0-9]{1,2})?$")
+    @Pattern(regexp = "^[A-Z]{2}[0-9]{2}(?:[ ]?[0-9]{4}){4}(?:[ ]?[0-9]{1,2})?$")
     String iban;
 
 }
