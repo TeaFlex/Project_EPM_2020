@@ -65,7 +65,7 @@ public class H2Persistence extends SQLikePersistence {
         }
 
         prep.setInt(1, emp.getEmpID());
-        prep.setDouble(2, emp.getPaymentClassification().getSalary());
+        prep.setDouble(2, emp.getPaymentClassification().getRate());
 
         rowsAffected = prep.executeUpdate();
 
