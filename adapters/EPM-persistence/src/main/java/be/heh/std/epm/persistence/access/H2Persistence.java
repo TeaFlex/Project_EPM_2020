@@ -33,23 +33,35 @@ public class H2Persistence extends SQLikePersistence {
 
         //Query on Employees table
 
+        boolean isIdZero = emp.getEmpID() == 0;
+
         String query = "insert into EMPLOYEES " +
-                "(empID, name, address, paymentClassification, paymentSchedule, PaymentMethod) " +
-                "VALUES (?, ?, ?, ?, ?, ?);";
+                "(name, address, paymentClassification, paymentSchedule, PaymentMethod" +
+                ((isIdZero) ? ") VALUES (?, ?, ?, ?, ?);":", empID) VALUES (?, ?, ?, ?, ?, ?);");
+
+        System.out.println(query);
         String type = emp.getPaymentClassification().getClass().getSimpleName();
         String method = emp.getPaymentMethod().getClass().getSimpleName();
         String schedule = emp.getPaymentSchedule().getClass().getSimpleName();
+        int id = emp.getEmpID();
 
-        PreparedStatement prep = getConnection().prepareStatement(query);
+        PreparedStatement prep = getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-        prep.setInt(1, emp.getEmpID());
-        prep.setString(2, emp.getName());
-        prep.setString(3, emp.getAddress());
-        prep.setString(4, type);
-        prep.setString(5, schedule);
-        prep.setString(6, method);
+        prep.setString(1, emp.getName());
+        prep.setString(2, emp.getAddress());
+        prep.setString(3, type);
+        prep.setString(4, schedule);
+        prep.setString(5, method);
+        if(!isIdZero) prep.setInt(6, id);
 
         int rowsAffected = prep.executeUpdate();
+
+        if(isIdZero) {
+            ResultSet rs = prep.getGeneratedKeys();
+            rs.next();
+            id = rs.getInt(1);
+        }
+
 
         //Query on any Classification table
 
@@ -65,7 +77,7 @@ public class H2Persistence extends SQLikePersistence {
             prep.setDouble(3, rate);
         }
 
-        prep.setInt(1, emp.getEmpID());
+        prep.setInt(1, id);
         prep.setDouble(2, emp.getPaymentClassification().getSalary());
 
         rowsAffected = prep.executeUpdate();
@@ -77,7 +89,7 @@ public class H2Persistence extends SQLikePersistence {
         if(method.equals("DirectDepositMethod")) {
             query += "iban, bank) VALUES (?, ?, ?);";
             prep = getConnection().prepareStatement(query);
-            prep.setInt(1, emp.getEmpID());
+            prep.setInt(1, id);
             String[] infos = {
                     ((DirectDepositMethod)emp.getPaymentMethod()).getBank(),
                     ((DirectDepositMethod)emp.getPaymentMethod()).getIban()
@@ -88,7 +100,7 @@ public class H2Persistence extends SQLikePersistence {
         else if(method.equals("MailMethod")) {
             query += "email) VALUES (?, ?);";
             prep = getConnection().prepareStatement(query);
-            prep.setInt(1, emp.getEmpID());
+            prep.setInt(1, id);
             String email = ((MailMethod)emp.getPaymentMethod()).getEmail();
             prep.setString(2,email);
         }

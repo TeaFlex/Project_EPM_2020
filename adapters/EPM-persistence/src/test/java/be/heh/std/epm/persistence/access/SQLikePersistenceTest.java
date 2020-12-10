@@ -1,6 +1,7 @@
 package be.heh.std.epm.persistence.access;
 
 import be.heh.std.epm.application.port.out.OutPersistence;
+import be.heh.std.epm.application.service.Operation;
 import be.heh.std.epm.domain.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,6 @@ public class SQLikePersistenceTest {
             System.out.println(e.getMessage());
         }
         employee = new Employee(1, "test", "test");
-
     }
 
     public void setBankMethod() {
@@ -41,12 +41,6 @@ public class SQLikePersistenceTest {
     public void saveEmployee() throws Exception{
         setBasicInfos();
         setBankMethod();
-        db.saveEmployee(employee);
-        assertTrue(db.dataExists(employee.getEmpID()));
-        assertEquals(employee, db.getData(employee.getEmpID()));
-
-        setMailMethod();
-        employee.setEmpID(2);
         db.saveEmployee(employee);
         assertTrue(db.dataExists(employee.getEmpID()));
         assertEquals(employee, db.getData(employee.getEmpID()));

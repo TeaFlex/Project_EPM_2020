@@ -19,7 +19,6 @@ public class EmployeeController {
     private OutPersistence db;
 
     public EmployeeController() {
-        //db = new TestPersistence();
         db = new H2Persistence("file:./h2DBs/mydb", "user", "123");
         gson = new Gson();
         operationEmp = new OperationEmp(db);
