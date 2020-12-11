@@ -96,8 +96,7 @@ public class H2Persistence extends SQLikePersistence {
             };
             prep.setString(2, infos[0]);
             prep.setString(3, infos[1]);
-        }
-        else if(method.equals("MailMethod")) {
+        } else if(method.equals("MailMethod")) {
             query += "email) VALUES (?, ?);";
             prep = getConnection().prepareStatement(query);
             prep.setInt(1, id);
@@ -111,9 +110,9 @@ public class H2Persistence extends SQLikePersistence {
     @Override
     public void saveReceipt(int id, Receipt receipt) throws Exception {
 
-        if(!dataExists(id))
+        if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
-        if(!(getData(id).getPaymentClassification() instanceof CommissionClassification))
+        if (!(getData(id).getPaymentClassification() instanceof CommissionClassification))
             throw new Exception("This employee can't receive receipt.");
 
 
@@ -132,9 +131,9 @@ public class H2Persistence extends SQLikePersistence {
     @Override
     public void saveTimeCard(int id, TimeCard timeCard) throws Exception {
 
-        if(!dataExists(id))
+        if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
-        if(!(getData(id).getPaymentClassification() instanceof HourlyClassification))
+        if (!(getData(id).getPaymentClassification() instanceof HourlyClassification))
             throw new Exception("This employee can't receive timecard.");
 
         String query = "Insert into Timecards (empid, tdate, hours) VALUES (?, ?, ?);";
@@ -151,7 +150,7 @@ public class H2Persistence extends SQLikePersistence {
     @Override
     public void delete(int id) throws Exception {
 
-        if(!dataExists(id))
+        if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
 
         String query = "Delete from Employees where empid = ?;";
@@ -165,14 +164,72 @@ public class H2Persistence extends SQLikePersistence {
     }
 
     @Override
-    public void replace(Employee emp) throws Exception {
-        //TODO
+    public void updateAddress(int id, String newAddress) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+
+        String query = "UPDATE Employees SET Adresse = ? WHERE empid = ?";
+
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setString(1, newAddress);
+        preparedStatement.setInt(2, id);
+
+        preparedStatement.executeUpdate();
+    }
+
+    @Override
+    public void updateName(int id, String newName) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+
+        String query = "UPDATE Employees SET Name = ? WHERE empid = ?";
+
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setString(1, newName);
+        preparedStatement.setInt(2, id);
+
+        preparedStatement.executeUpdate();
+    }
+
+    @Override
+    public void updateToCommissioned(int id, double salary, double commissionRate) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        deletePaymentClassification(id);
+    }
+
+    @Override
+    public void updateToHourly(int id, double rate) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        deletePaymentClassification(id);
+    }
+
+    @Override
+    public void updateToSalaried(int id, double salary) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        deletePaymentClassification(id);
+    }
+
+    @Override
+    public void updateToDirectDepositMethod(int id, String bank, String iban) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        deletePaymentMethod(id);
+    }
+
+    @Override
+    public void updateToMailMethod(int id, String email) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        deletePaymentMethod(id);
     }
 
     @Override
     public Employee getData(int id) throws Exception {
 
-        if(!this.dataExists(id))
+        if (!this.dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
 
         PaymentSchedule paymentSchedule = null;
@@ -253,4 +310,11 @@ public class H2Persistence extends SQLikePersistence {
         return result;
     }
 
+    private void deletePaymentClassification(int id) throws Exception {
+
+    }
+
+    private void deletePaymentMethod(int id) throws Exception {
+
+    }
 }

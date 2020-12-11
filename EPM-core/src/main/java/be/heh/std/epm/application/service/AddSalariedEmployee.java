@@ -18,10 +18,10 @@ public class AddSalariedEmployee extends AddEmployee {
 
     @Override
     public void execute(OutPersistence outPersistence) throws Exception {
-        Employee e = new Employee(id, name, address);
-        e.setPaymentMethod(getPayementMethod());
-        e.setPaymentSchedule(new MonthlyPaymentSchedule());
-        e.setPaymentClassification(new SalariedClassification(salary));
-        outPersistence.saveEmployee(e);
+        Employee employee = new Employee(id, name, address);
+        employee.setPaymentMethod(getPaymentMethod());
+        employee.setPaymentSchedule(new MonthlyPaymentSchedule());
+        employee.setPaymentClassification(new SalariedClassification(salary));
+        outPersistence.saveEmployee(employee);
     }
 }

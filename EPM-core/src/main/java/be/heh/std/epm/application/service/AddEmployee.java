@@ -28,12 +28,13 @@ public abstract class AddEmployee implements Operation {
     @Pattern(regexp = "^[A-Z]{2}[0-9]{2}(?:[ ]?[0-9]{4}){4}(?:[ ]?[0-9]{1,2})?$")
     String iban;
 
-    protected PaymentMethod getPayementMethod() throws Exception{
+    protected PaymentMethod getPaymentMethod() throws Exception {
         if (!Objects.isNull(email)) {
             return new MailMethod(email);
         } else if (!Objects.isNull(bank) && !Objects.isNull(iban)) {
             return new DirectDepositMethod(bank, iban);
         } else {
+            //Ne devrait jamais se produire grâce à la validation
             throw new Exception("Payment method information is either missing or incomplete.");
         }
     }

@@ -44,6 +44,41 @@ public class ListPersistence implements OutPersistence {
     }
 
     @Override
+    public void updateAddress(int id, String newAddress) throws Exception {
+
+    }
+
+    @Override
+    public void updateName(int id, String newName) throws Exception {
+
+    }
+
+    @Override
+    public void updateToCommissioned(int id, double salary, double commissionRate) throws Exception {
+
+    }
+
+    @Override
+    public void updateToHourly(int id, double rate) throws Exception {
+
+    }
+
+    @Override
+    public void updateToSalaried(int id, double salary) throws Exception {
+
+    }
+
+    @Override
+    public void updateToDirectDepositMethod(int id, String bank, String iban) throws Exception {
+
+    }
+
+    @Override
+    public void updateToMailMethod(int id, String email) throws Exception {
+
+    }
+
+    @Override
     public Employee getData(int id) throws Exception {
         if(!database.containsKey(id)) throw new Exception("This employee does not exist.");
         return (Employee) database.get(id);
@@ -52,13 +87,6 @@ public class ListPersistence implements OutPersistence {
     @Override
     public boolean dataExists(int id) throws Exception {
         return database.containsKey(id);
-    }
-
-    @Override
-    public void replace(Employee e) throws Exception {
-        if(!database.containsKey(e.getEmpID()))
-            throw new Exception("There's no such employee to replace.");
-        this.database.replace(e.getEmpID(), e);
     }
 
     public HashMap<Integer, Employee> getDatabase() {
