@@ -13,6 +13,6 @@ public class DeleteEmployee implements Operation {
 
     @Override
     public void execute(OutPersistence outPersistence) throws Exception {
-        outPersistence.delete(id);
+        outPersistence.deleteEmployee(id);
     }
 }

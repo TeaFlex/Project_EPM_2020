@@ -26,7 +26,7 @@ public class PostGreSQLPersistence extends SQLikePersistence {
     }
 
     @Override
-    public void delete(int id) throws Exception {
+    public void deleteEmployee(int id) throws Exception {
         //TODO
     }
 

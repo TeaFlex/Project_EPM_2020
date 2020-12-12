@@ -8,7 +8,7 @@ public interface OutPersistence {
     void saveEmployee(Employee emp) throws Exception;
     void saveReceipt(int id, Receipt receipt) throws Exception;
     void saveTimeCard(int id, TimeCard timeCard) throws Exception;
-    void delete(int id) throws Exception;
+    void deleteEmployee(int id) throws Exception;
     void updateAddress(int id, String newAddress) throws Exception;
     void updateName(int id, String newName) throws Exception;
     void updateToCommissioned(int id, double salary, double commissionRate) throws Exception;

@@ -37,7 +37,7 @@ public class ListPersistence implements OutPersistence {
 
 
     @Override
-    public void delete(int id) throws Exception {
+    public void deleteEmployee(int id) throws Exception {
         if(!database.containsKey(id))
             throw new Exception("This employee does not exist.");
         database.remove(id);

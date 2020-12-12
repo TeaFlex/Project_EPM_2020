@@ -60,7 +60,7 @@ public class SQLikePersistenceTest {
         //Vérification de l'existence de l'employé dans la db.
         assertTrue(db.dataExists(employee.getEmpID()));
 
-        db.delete(employee.getEmpID());
+        db.deleteEmployee(employee.getEmpID());
         //Vérification de l'absence de l'employé dans la db.
         assertFalse(db.dataExists(employee.getEmpID()));
     }
@@ -68,7 +68,7 @@ public class SQLikePersistenceTest {
     @Test(expected = Exception.class)
     public void badDeleteEmployee() throws Exception {
         //Suppression d'un employé inexistant dans la db.
-        db.delete(employee.getEmpID());
+        db.deleteEmployee(employee.getEmpID());
     }
 
     @Test

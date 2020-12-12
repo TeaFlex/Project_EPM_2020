@@ -2,6 +2,7 @@ package be.heh.std.epm.persistence.access;
 
 import be.heh.std.epm.domain.*;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.File;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -148,7 +149,7 @@ public class H2Persistence extends SQLikePersistence {
     }
 
     @Override
-    public void delete(int id) throws Exception {
+    public void deleteEmployee(int id) throws Exception {
 
         if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
@@ -314,11 +315,50 @@ public class H2Persistence extends SQLikePersistence {
     }
 
     private void deletePaymentClassification(int id) throws Exception {
+        String query = String.format("Select paymentClassification from Employees " +
+                "where empid = %d;", id);
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        resultSet.next();
+        String type = resultSet.getString(1);
+        statement = null;
 
+        deletePaymentSchedule(id);
+
+        query = String.format("Delete from %s where empid = ?;", type);
+        PreparedStatement prep = getConnection().prepareStatement(query);
+        prep.setInt(1, id);
+        int r = prep.executeUpdate();
+    }
+
+    private void deletePaymentSchedule(int id) throws Exception {
+        String query = String.format("Select paymentSchedule from Employees " +
+                "where empid = %d;", id);
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        resultSet.next();
+        String schedule = resultSet.getString(1);
+        statement = null;
+
+        query = String.format("Delete from %s where empid = ?;", schedule);
+        PreparedStatement prep = getConnection().prepareStatement(query);
+        prep.setInt(1, id);
+        int r = prep.executeUpdate();
     }
 
     private void deletePaymentMethod(int id) throws Exception {
+        String query = String.format("Select paymentMethod from Employees " +
+                "where empid = %d;", id);
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        resultSet.next();
+        String method = resultSet.getString(1);
+        statement = null;
 
+        query = String.format("Delete from %s where empid = ?;", method);
+        PreparedStatement prep = getConnection().prepareStatement(query);
+        prep.setInt(1, id);
+        int r = prep.executeUpdate();
     }
 
     private ArrayList<TimeCard> getTimeCards(int id) throws Exception {
