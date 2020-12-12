@@ -3,10 +3,9 @@ package be.heh.std.epm.persistence.access;
 import be.heh.std.epm.domain.*;
 
 import java.io.File;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class H2Persistence extends SQLikePersistence {
 
@@ -39,7 +38,7 @@ public class H2Persistence extends SQLikePersistence {
                 "(name, address, paymentClassification, paymentSchedule, PaymentMethod" +
                 ((isIdZero) ? ") VALUES (?, ?, ?, ?, ?);":", empID) VALUES (?, ?, ?, ?, ?, ?);");
 
-        System.out.println(query);
+        //System.out.println(query);
         String type = emp.getPaymentClassification().getClass().getSimpleName();
         String method = emp.getPaymentMethod().getClass().getSimpleName();
         String schedule = emp.getPaymentSchedule().getClass().getSimpleName();
@@ -61,7 +60,6 @@ public class H2Persistence extends SQLikePersistence {
             rs.next();
             id = rs.getInt(1);
         }
-
 
         //Query on any Classification table
 
@@ -236,7 +234,8 @@ public class H2Persistence extends SQLikePersistence {
         PaymentClassification paymentClassification = null;
         PaymentMethod paymentMethod = null;
 
-        String query = String.format("SELECT paymentClassification, paymentMethod, paymentSchedule FROM EMPLOYEES WHERE empid=%d", id);
+        String query = String.format("SELECT paymentClassification, paymentMethod, paymentSchedule " +
+                "FROM EMPLOYEES WHERE empid=%d", id);
         Statement statement = getConnection().createStatement();
 
         ResultSet rs = statement.executeQuery(query);
@@ -262,9 +261,13 @@ public class H2Persistence extends SQLikePersistence {
                 break;
             case "Commission":
                 paymentClassification = new CommissionClassification(p, rs.getDouble("rate"));
+                for (Receipt r : this.getReceipts(response.getEmpID()))
+                    ((CommissionClassification) paymentClassification).addReceipt(r);
                 break;
             case "Hourly":
                 paymentClassification = new HourlyClassification(p);
+                for (TimeCard c : this.getTimeCards(response.getEmpID()))
+                    ((HourlyClassification) paymentClassification).addTimeCard(c);
                 break;
         }
 
@@ -279,8 +282,6 @@ public class H2Persistence extends SQLikePersistence {
                 paymentSchedule = new BiweeklyPaymentSchedule();
                 break;
         }
-
-        //TODO: faire une query qui prend toutes les timecard/Receipts et les rajoute à la collection de l'objet
 
         switch (method.replace("Method", "")) {
             case "Mail":
@@ -316,5 +317,35 @@ public class H2Persistence extends SQLikePersistence {
 
     private void deletePaymentMethod(int id) throws Exception {
 
+    }
+
+    private ArrayList<TimeCard> getTimeCards(int id) throws Exception {
+        ArrayList<TimeCard> response = new ArrayList<>();
+        String query = String.format("SELECT * FROM TimeCards WHERE empid = %d;", id);
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        TimeCard timeCard;
+        while(resultSet.next()) {
+            timeCard = new TimeCard(resultSet.getDate("tDate").toLocalDate(),
+                    resultSet.getDouble("hours"));
+            response.add(timeCard);
+        }
+        statement = null;
+        return response;
+    }
+
+    private ArrayList<Receipt> getReceipts(int id) throws Exception {
+        ArrayList<Receipt> response = new ArrayList<>();
+        String query = String.format("SELECT * FROM Receipts WHERE empid = %d;", id);
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        Receipt receipt;
+        while(resultSet.next()) {
+            receipt = new Receipt(resultSet.getDate("tDate").toLocalDate(),
+                    resultSet.getDouble("price"));
+            response.add(receipt);
+        }
+        statement = null;
+        return response;
     }
 }
