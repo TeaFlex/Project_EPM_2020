@@ -197,6 +197,17 @@ public class H2Persistence extends SQLikePersistence {
         if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
         deletePaymentClassification(id);
+
+        String query = "UPDATE Employees SET paymentClassification = 'Commission' WHERE empid = " + id;
+        Statement statement = getConnection().createStatement();
+        statement.executeQuery(query);
+
+        query = "INSERT INTO CommissionClassification VALUES (?, ?, ?)";
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setInt(1, id);
+        preparedStatement.setDouble(2, salary);
+        preparedStatement.setDouble(3, commissionRate);
+        preparedStatement.executeUpdate();
     }
 
     @Override
@@ -204,6 +215,16 @@ public class H2Persistence extends SQLikePersistence {
         if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
         deletePaymentClassification(id);
+
+        String query = "UPDATE Employees SET paymentClassification = 'Hourly' WHERE empid = " + id;
+        Statement statement = getConnection().createStatement();
+        statement.executeQuery(query);
+
+        query = "INSERT INTO HourlyClassification VALUES (?, ?)";
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setInt(1, id);
+        preparedStatement.setDouble(2, rate);
+        preparedStatement.executeUpdate();
     }
 
     @Override
@@ -211,6 +232,16 @@ public class H2Persistence extends SQLikePersistence {
         if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
         deletePaymentClassification(id);
+
+        String query = "UPDATE Employees SET paymentClassification = 'Salaried' WHERE empid = " + id;
+        Statement statement = getConnection().createStatement();
+        statement.executeQuery(query);
+
+        query = "INSERT INTO SalariedClassification VALUES (?, ?)";
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setInt(1, id);
+        preparedStatement.setDouble(2, salary);
+        preparedStatement.executeUpdate();
     }
 
     @Override
