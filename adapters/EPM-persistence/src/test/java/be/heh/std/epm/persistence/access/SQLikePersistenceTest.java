@@ -21,7 +21,7 @@ public class SQLikePersistenceTest {
         }catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        employee = new Employee(1, "test", "test");
+        employee = new Employee(1, "Link", "Hyrule");
         setBasicInfos();
         setBankMethod();
     }
@@ -49,9 +49,46 @@ public class SQLikePersistenceTest {
 
     @Test(expected = Exception.class)
     public void badSaveEmployee() throws Exception {
-        //Double ajout d'employé
+        //Double ajout d'employé.
         db.saveEmployee(employee);
         db.saveEmployee(employee);
+    }
+
+    @Test
+    public void deleteEmployee() throws Exception{
+        db.saveEmployee(employee);
+        //Vérification de l'existence de l'employé dans la db.
+        assertTrue(db.dataExists(employee.getEmpID()));
+
+        db.delete(employee.getEmpID());
+        //Vérification de l'absence de l'employé dans la db.
+        assertFalse(db.dataExists(employee.getEmpID()));
+    }
+
+    @Test(expected = Exception.class)
+    public void badDeleteEmployee() throws Exception {
+        //Suppression d'un employé inexistant dans la db.
+        db.delete(employee.getEmpID());
+    }
+
+    @Test
+    public void updateAdressEmployee() throws Exception {
+        db.saveEmployee(employee);
+        db.updateAddress(employee.getEmpID(), "Ile de Koridaï");
+
+        //Vérification de la différence des deux adresses.
+        Employee dbEmployee = db.getData(employee.getEmpID());
+        assertNotSame(employee.getAddress(), dbEmployee.getAddress());
+    }
+
+    @Test
+    public void updateNameEmployee() throws Exception {
+        db.saveEmployee(employee);
+        db.updateName(employee.getEmpID(), "Squalala");
+
+        //Vérification de la différence des deux noms.
+        Employee dbEmployee = db.getData(employee.getEmpID());
+        assertNotSame(employee.getName(), dbEmployee.getName());
     }
 
     @Test
@@ -63,7 +100,7 @@ public class SQLikePersistenceTest {
         db.saveTimeCard(employee.getEmpID(), tc);
 
         //Vérification que l'objet initial et l'objet de la db sont différents.
-        assertFalse(employee.equals(db.getData(employee.getEmpID())));
+        assertNotEquals(employee, db.getData(employee.getEmpID()));
 
         //Après ajout de la TimeCard à l'objet initial, on vérifie que les deux employés soient bien similaires.
         ((HourlyClassification)employee.getPaymentClassification()).addTimeCard(tc);
@@ -104,7 +141,7 @@ public class SQLikePersistenceTest {
         db.saveReceipt(employee.getEmpID(), rc);
 
         //Vérification que l'objet initial et l'objet de la db sont différents.
-        assertFalse(employee.equals(db.getData(employee.getEmpID())));
+        assertNotEquals(employee, db.getData(employee.getEmpID()));
 
         //Après ajout de la Receipt à l'objet initial, on vérifie que les deux employés soient bien similaires.
         ((CommissionClassification)employee.getPaymentClassification()).addReceipt(rc);

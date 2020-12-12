@@ -3,9 +3,11 @@ package be.heh.std.epm.persistence.access;
 import be.heh.std.epm.domain.*;
 
 import java.io.File;
-import java.sql.*;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 public class H2Persistence extends SQLikePersistence {
 
@@ -166,7 +168,7 @@ public class H2Persistence extends SQLikePersistence {
         if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
 
-        String query = "UPDATE Employees SET Adresse = ? WHERE empid = ?";
+        String query = "UPDATE Employees SET Address = ? WHERE empid = ?";
 
         PreparedStatement preparedStatement = getConnection().prepareStatement(query);
         preparedStatement.setString(1, newAddress);
