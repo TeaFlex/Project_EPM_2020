@@ -76,9 +76,10 @@ public class SQLikePersistenceTest {
         db.saveEmployee(employee);
         db.updateAddress(employee.getEmpID(), "Ile de Koridaï");
 
-        //Vérification de la différence des deux adresses.
+        //Vérification de la différence des deux adresses et de l'entièreté de la nouvelle.
         Employee dbEmployee = db.getData(employee.getEmpID());
         assertNotSame(employee.getAddress(), dbEmployee.getAddress());
+        assertEquals(dbEmployee.getAddress(), "Ile de Koridaï");
     }
 
     @Test
@@ -86,9 +87,10 @@ public class SQLikePersistenceTest {
         db.saveEmployee(employee);
         db.updateName(employee.getEmpID(), "Squalala");
 
-        //Vérification de la différence des deux noms.
+        //Vérification de la différence des deux noms et de l'entièreté du nouveau.
         Employee dbEmployee = db.getData(employee.getEmpID());
         assertNotSame(employee.getName(), dbEmployee.getName());
+        assertEquals(dbEmployee.getName(), "Squalala");
     }
 
     @Test
