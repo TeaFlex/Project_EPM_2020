@@ -18,6 +18,6 @@ public class UpdateToDirectDepositMethod extends UpdateEmployee {
 
     @Override
     public void execute(OutPersistence outPersistence) throws Exception {
-
+        outPersistence.updateToDirectDepositMethod(id, bank, iban);
     }
 }

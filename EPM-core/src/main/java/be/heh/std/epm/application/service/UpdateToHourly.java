@@ -15,6 +15,6 @@ public class UpdateToHourly extends UpdateEmployee {
 
     @Override
     public void execute(OutPersistence outPersistence) throws Exception {
-
+        outPersistence.updateToHourly(id, rate);
     }
 }

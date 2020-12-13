@@ -16,6 +16,6 @@ public class UpdateToMailMethod extends UpdateEmployee {
 
     @Override
     public void execute(OutPersistence outPersistence) throws Exception {
-
+        outPersistence.updateToMailMethod(id, email);
     }
 }

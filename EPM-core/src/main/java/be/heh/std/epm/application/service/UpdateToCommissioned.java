@@ -17,6 +17,6 @@ public class UpdateToCommissioned extends UpdateEmployee {
 
     @Override
     public void execute(OutPersistence outPersistence) throws Exception {
-
+        outPersistence.updateToCommissioned(id, salary, commissionRate);
     }
 }

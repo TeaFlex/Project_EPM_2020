@@ -15,6 +15,6 @@ public class UpdateToSalaried extends UpdateEmployee {
 
     @Override
     public void execute(OutPersistence outPersistence) throws Exception {
-
+        outPersistence.updateToSalaried(id, salary);
     }
 }
