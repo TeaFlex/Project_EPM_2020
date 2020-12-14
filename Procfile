@@ -1,1 +1,1 @@
-web: java -jar ./adapters/EPM-web/build/libs/EPM-web-1.0-SNAPSHOT.jar
+web: java -jar -Dserver.port=$PORT ./adapters/EPM-web/build/libs/EPM-web-1.0-SNAPSHOT.jar
