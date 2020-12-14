@@ -1,2 +1,11 @@
+plugins {
+    id 'application'
+}
+
 group 'org.example'
 version '1.0-SNAPSHOT'
+
+application {
+    // Define the main class for the application.
+    mainClassName = 'be.heh.std.epm.web.WebApp'
+}

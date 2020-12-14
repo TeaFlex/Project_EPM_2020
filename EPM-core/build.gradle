@@ -37,8 +37,3 @@ dependencies {
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
 }
-
-application {
-    // Define the main class for the application.
-    mainClassName = 'be.heh.std.epm.core.App'
-}
