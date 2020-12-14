@@ -1,13 +1,14 @@
 package be.heh.std.epm.persistence.access;
 
-import be.heh.std.epm.application.data.DataCommissionEmployee;
-import be.heh.std.epm.application.data.DataEmployee;
-import be.heh.std.epm.application.data.DataHourlyEmployee;
-import be.heh.std.epm.application.data.DataSalariedEmployee;
 import be.heh.std.epm.domain.*;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.File;
-import java.sql.*;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 public class H2Persistence extends SQLikePersistence {
 
@@ -34,21 +35,34 @@ public class H2Persistence extends SQLikePersistence {
 
         //Query on Employees table
 
+        boolean isIdZero = emp.getEmpID() == 0;
+
         String query = "insert into EMPLOYEES " +
-                "(empID, name, address, type, PaymentMethod) " +
-                "VALUES (?, ?, ?, ?, ?);";
+                "(name, address, paymentClassification, paymentSchedule, PaymentMethod" +
+                ((isIdZero) ? ") VALUES (?, ?, ?, ?, ?);":", empID) VALUES (?, ?, ?, ?, ?, ?);");
+
+        //System.out.println(query);
         String type = emp.getPaymentClassification().getClass().getSimpleName();
         String method = emp.getPaymentMethod().getClass().getSimpleName();
+        String schedule = emp.getPaymentSchedule().getClass().getSimpleName();
+        int id = emp.getEmpID();
 
-        PreparedStatement prep = getConnection().prepareStatement(query);
+        PreparedStatement prep = getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-        prep.setInt(1, emp.getEmpID());
-        prep.setString(2, emp.getName());
-        prep.setString(3, emp.getAddress());
-        prep.setString(4, type);
+        prep.setString(1, emp.getName());
+        prep.setString(2, emp.getAddress());
+        prep.setString(3, type);
+        prep.setString(4, schedule);
         prep.setString(5, method);
+        if(!isIdZero) prep.setInt(6, id);
 
         int rowsAffected = prep.executeUpdate();
+
+        if(isIdZero) {
+            ResultSet rs = prep.getGeneratedKeys();
+            rs.next();
+            id = rs.getInt(1);
+        }
 
         //Query on any Classification table
 
@@ -64,8 +78,8 @@ public class H2Persistence extends SQLikePersistence {
             prep.setDouble(3, rate);
         }
 
-        prep.setInt(1, emp.getEmpID());
-        prep.setDouble(2, emp.getPaymentClassification().getRate());
+        prep.setInt(1, id);
+        prep.setDouble(2, emp.getPaymentClassification().getSalary());
 
         rowsAffected = prep.executeUpdate();
 
@@ -76,18 +90,17 @@ public class H2Persistence extends SQLikePersistence {
         if(method.equals("DirectDepositMethod")) {
             query += "iban, bank) VALUES (?, ?, ?);";
             prep = getConnection().prepareStatement(query);
-            prep.setInt(1, emp.getEmpID());
+            prep.setInt(1, id);
             String[] infos = {
                     ((DirectDepositMethod)emp.getPaymentMethod()).getBank(),
                     ((DirectDepositMethod)emp.getPaymentMethod()).getIban()
             };
             prep.setString(2, infos[0]);
             prep.setString(3, infos[1]);
-        }
-        else if(method.equals("MailMethod")) {
+        } else if(method.equals("MailMethod")) {
             query += "email) VALUES (?, ?);";
             prep = getConnection().prepareStatement(query);
-            prep.setInt(1, emp.getEmpID());
+            prep.setInt(1, id);
             String email = ((MailMethod)emp.getPaymentMethod()).getEmail();
             prep.setString(2,email);
         }
@@ -98,9 +111,9 @@ public class H2Persistence extends SQLikePersistence {
     @Override
     public void saveReceipt(int id, Receipt receipt) throws Exception {
 
-        if(!dataExists(id))
+        if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
-        if(!(getData(id).getPaymentClassification() instanceof CommissionClassification))
+        if (!(getData(id).getPaymentClassification() instanceof CommissionClassification))
             throw new Exception("This employee can't receive receipt.");
 
 
@@ -119,9 +132,9 @@ public class H2Persistence extends SQLikePersistence {
     @Override
     public void saveTimeCard(int id, TimeCard timeCard) throws Exception {
 
-        if(!dataExists(id))
+        if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
-        if(!(getData(id).getPaymentClassification() instanceof HourlyClassification))
+        if (!(getData(id).getPaymentClassification() instanceof HourlyClassification))
             throw new Exception("This employee can't receive timecard.");
 
         String query = "Insert into Timecards (empid, tdate, hours) VALUES (?, ?, ?);";
@@ -136,9 +149,9 @@ public class H2Persistence extends SQLikePersistence {
     }
 
     @Override
-    public void delete(int id) throws Exception {
+    public void deleteEmployee(int id) throws Exception {
 
-        if(!dataExists(id))
+        if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
 
         String query = "Delete from Employees where empid = ?;";
@@ -152,58 +165,174 @@ public class H2Persistence extends SQLikePersistence {
     }
 
     @Override
-    public void replace(Employee emp) throws Exception {
-        //TODO
+    public void updateAddress(int id, String newAddress) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+
+        String query = "UPDATE Employees SET Address = ? WHERE empid = ?";
+
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setString(1, newAddress);
+        preparedStatement.setInt(2, id);
+
+        preparedStatement.executeUpdate();
+    }
+
+    @Override
+    public void updateName(int id, String newName) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+
+        String query = "UPDATE Employees SET Name = ? WHERE empid = ?";
+
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setString(1, newName);
+        preparedStatement.setInt(2, id);
+
+        preparedStatement.executeUpdate();
+    }
+
+    @Override
+    public void updateToCommissioned(int id, double salary, double commissionRate) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        deletePaymentClassification(id);
+
+        String query = "UPDATE Employees SET paymentClassification = 'Commission' WHERE empid = " + id;
+        Statement statement = getConnection().createStatement();
+        statement.executeQuery(query);
+
+        query = "INSERT INTO CommissionClassification VALUES (?, ?, ?)";
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setInt(1, id);
+        preparedStatement.setDouble(2, salary);
+        preparedStatement.setDouble(3, commissionRate);
+        preparedStatement.executeUpdate();
+    }
+
+    @Override
+    public void updateToHourly(int id, double rate) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        deletePaymentClassification(id);
+
+        String query = "UPDATE Employees SET paymentClassification = 'Hourly' WHERE empid = " + id;
+        Statement statement = getConnection().createStatement();
+        statement.executeQuery(query);
+
+        query = "INSERT INTO HourlyClassification VALUES (?, ?)";
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setInt(1, id);
+        preparedStatement.setDouble(2, rate);
+        preparedStatement.executeUpdate();
+    }
+
+    @Override
+    public void updateToSalaried(int id, double salary) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        deletePaymentClassification(id);
+
+        String query = "UPDATE Employees SET paymentClassification = 'Salaried' WHERE empid = " + id;
+        Statement statement = getConnection().createStatement();
+        statement.executeQuery(query);
+
+        query = "INSERT INTO SalariedClassification VALUES (?, ?)";
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setInt(1, id);
+        preparedStatement.setDouble(2, salary);
+        preparedStatement.executeUpdate();
+    }
+
+    @Override
+    public void updateToDirectDepositMethod(int id, String bank, String iban) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        deletePaymentMethod(id);
+    }
+
+    @Override
+    public void updateToMailMethod(int id, String email) throws Exception {
+        if (!dataExists(id))
+            throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
+        deletePaymentMethod(id);
     }
 
     @Override
     public Employee getData(int id) throws Exception {
 
-        if(!this.dataExists(id))
+        if (!this.dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
 
-        DataEmployee response = null;
-        String query = String.format("SELECT type, paymentmethod FROM EMPLOYEES WHERE empid=%d", id);
+        PaymentSchedule paymentSchedule = null;
+        PaymentClassification paymentClassification = null;
+        PaymentMethod paymentMethod = null;
+
+        String query = String.format("SELECT paymentClassification, paymentMethod, paymentSchedule " +
+                "FROM EMPLOYEES WHERE empid=%d", id);
         Statement statement = getConnection().createStatement();
 
         ResultSet rs = statement.executeQuery(query);
         rs.next();
-        String type = rs.getString("type");
+        String type = rs.getString("paymentClassification");
         String method = rs.getString("paymentMethod");
-
-        switch (type.replace("Classification", "")) {
-            case "Salaried":
-                response = new DataSalariedEmployee();
-                break;
-            case "Commission":
-                response = new DataCommissionEmployee();
-                break;
-            case "Hourly":
-                response = new DataHourlyEmployee();
-                break;
-        }
+        String schedule = rs.getString("paymentSchedule");
 
         query = String.format("SELECT E.name, E.address, T.*, G.* from EMPLOYEES E, " +
                 "%s T, %s G WHERE E.empid=%d AND T.empid = E.empid AND G.empid = E.empid;", type, method, id);
         rs = statement.executeQuery(query);
         rs.next();
 
-        response.setId(rs.getInt("empid"));
-        response.setName(rs.getString("name"));
-        response.setAddress(rs.getString("address"));
+        Employee response = new Employee(rs.getInt("empid"),
+                rs.getString("name"),
+                rs.getString("address"));
 
-        switch (method.replace("Method", "")) {
-            case "Mail":
-                response.setEmail(rs.getString("email"));
+        double p = rs.getDouble("salary");
+
+        switch (type.replace("Classification", "")) {
+            case "Salaried":
+                paymentClassification = new SalariedClassification(p);
                 break;
-            case "DirectDeposit":
-                response.setIban(rs.getString("iban"));
-                response.setBank(rs.getString("bank"));
+            case "Commission":
+                paymentClassification = new CommissionClassification(p, rs.getDouble("rate"));
+                for (Receipt r : this.getReceipts(response.getEmpID()))
+                    ((CommissionClassification) paymentClassification).addReceipt(r);
+                break;
+            case "Hourly":
+                paymentClassification = new HourlyClassification(p);
+                for (TimeCard c : this.getTimeCards(response.getEmpID()))
+                    ((HourlyClassification) paymentClassification).addTimeCard(c);
                 break;
         }
 
+        switch (schedule.replace("PaymentSchedule", "")) {
+            case "Monthly":
+                paymentSchedule = new MonthlyPaymentSchedule();
+                break;
+            case "Weekly":
+                paymentSchedule = new WeeklyPaymentSchedule();
+                break;
+            case "Biweekly":
+                paymentSchedule = new BiweeklyPaymentSchedule();
+                break;
+        }
+
+        switch (method.replace("Method", "")) {
+            case "Mail":
+                paymentMethod = new MailMethod(rs.getString("email"));
+                break;
+            case "DirectDeposit":
+                paymentMethod = new DirectDepositMethod(rs.getString("iban"),
+                        rs.getString("bank"));
+                break;
+        }
+
+        response.setPaymentClassification(paymentClassification);
+        response.setPaymentMethod(paymentMethod);
+        response.setPaymentSchedule(paymentSchedule);
+
         statement = null;
-        return response.toEmployee();
+        return response;
     }
 
     @Override
@@ -216,4 +345,80 @@ public class H2Persistence extends SQLikePersistence {
         return result;
     }
 
+    private void deletePaymentClassification(int id) throws Exception {
+        String query = String.format("Select paymentClassification from Employees " +
+                "where empid = %d;", id);
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        resultSet.next();
+        String type = resultSet.getString(1);
+        statement = null;
+
+        deletePaymentSchedule(id);
+
+        query = String.format("Delete from %s where empid = ?;", type);
+        PreparedStatement prep = getConnection().prepareStatement(query);
+        prep.setInt(1, id);
+        int r = prep.executeUpdate();
+    }
+
+    private void deletePaymentSchedule(int id) throws Exception {
+        String query = String.format("Select paymentSchedule from Employees " +
+                "where empid = %d;", id);
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        resultSet.next();
+        String schedule = resultSet.getString(1);
+        statement = null;
+
+        query = String.format("Delete from %s where empid = ?;", schedule);
+        PreparedStatement prep = getConnection().prepareStatement(query);
+        prep.setInt(1, id);
+        int r = prep.executeUpdate();
+    }
+
+    private void deletePaymentMethod(int id) throws Exception {
+        String query = String.format("Select paymentMethod from Employees " +
+                "where empid = %d;", id);
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        resultSet.next();
+        String method = resultSet.getString(1);
+        statement = null;
+
+        query = String.format("Delete from %s where empid = ?;", method);
+        PreparedStatement prep = getConnection().prepareStatement(query);
+        prep.setInt(1, id);
+        int r = prep.executeUpdate();
+    }
+
+    private ArrayList<TimeCard> getTimeCards(int id) throws Exception {
+        ArrayList<TimeCard> response = new ArrayList<>();
+        String query = String.format("SELECT * FROM TimeCards WHERE empid = %d;", id);
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        TimeCard timeCard;
+        while(resultSet.next()) {
+            timeCard = new TimeCard(resultSet.getDate("tDate").toLocalDate(),
+                    resultSet.getDouble("hours"));
+            response.add(timeCard);
+        }
+        statement = null;
+        return response;
+    }
+
+    private ArrayList<Receipt> getReceipts(int id) throws Exception {
+        ArrayList<Receipt> response = new ArrayList<>();
+        String query = String.format("SELECT * FROM Receipts WHERE empid = %d;", id);
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        Receipt receipt;
+        while(resultSet.next()) {
+            receipt = new Receipt(resultSet.getDate("tDate").toLocalDate(),
+                    resultSet.getDouble("price"));
+            response.add(receipt);
+        }
+        statement = null;
+        return response;
+    }
 }

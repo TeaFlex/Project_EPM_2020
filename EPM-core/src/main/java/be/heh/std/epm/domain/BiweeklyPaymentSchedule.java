@@ -1,9 +1,12 @@
 package be.heh.std.epm.domain;
 
+import lombok.Value;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 
+@Value
 public class BiweeklyPaymentSchedule implements PaymentSchedule {
 
     @Override

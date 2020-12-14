@@ -1,12 +1,11 @@
 package be.heh.std.epm.domain;
 
-import lombok.Getter;
+import lombok.Value;
 
+@Value
 public class DirectDepositMethod implements PaymentMethod {
 
-    @Getter
     private String bank;
-    @Getter
     private String iban;
 
     public DirectDepositMethod(String bank, String iban) {
@@ -15,7 +14,7 @@ public class DirectDepositMethod implements PaymentMethod {
     }
 
     @Override
-    public String toString() {
+    public String getMethodInfos() {
         return String.format("direct deposit into %s : %s", bank, iban);
     }
 }

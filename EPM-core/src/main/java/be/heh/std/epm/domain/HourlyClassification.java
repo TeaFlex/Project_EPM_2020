@@ -1,19 +1,18 @@
 package be.heh.std.epm.domain;
 
-import lombok.Getter;
+import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Value
 public class HourlyClassification implements PaymentClassification {
 
-    @Getter
-    private double rate;
-    @Getter
+    private double salary;
     private List<TimeCard> timeCards;
 
-    public HourlyClassification(double rate) {
-        this.rate = rate;
+    public HourlyClassification(double salary) {
+        this.salary = salary;
         timeCards = new ArrayList<>();
     }
 
@@ -26,8 +25,8 @@ public class HourlyClassification implements PaymentClassification {
         double pay = 0;
         for (TimeCard timeCard : timeCards) {
             if (dateRange.isWithinRange(timeCard.getDate())) {
-                if (timeCard.getHours() > 8) pay += (8 * rate) + ((timeCard.getHours() - 8) * 1.5 * rate);
-                else pay += timeCard.getHours() * rate;
+                if (timeCard.getHours() > 8) pay += (8 * salary) + ((timeCard.getHours() - 8) * 1.5 * salary);
+                else pay += timeCard.getHours() * salary;
             }
         }
         return pay;

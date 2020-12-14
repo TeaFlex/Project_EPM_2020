@@ -1,10 +1,12 @@
 package be.heh.std.epm.domain;
 
-import lombok.Getter;
+import lombok.Value;
+import lombok.experimental.NonFinal;
 
+@Value
+@NonFinal
 public class SalariedClassification implements PaymentClassification {
 
-    @Getter
     private double salary;
 
     public SalariedClassification(double salary) {

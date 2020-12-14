@@ -1,5 +1,6 @@
-package be.heh.std.epm.application.data;
+package be.heh.std.epm.application.service;
 
+import be.heh.std.epm.application.port.out.OutPersistence;
 import be.heh.std.epm.domain.TimeCard;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -10,7 +11,10 @@ import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @Data
-public class DataTimeCard {
+public class PostTimeCard implements Operation {
+
+    @NotNull
+    int id;
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @NotNull @PastOrPresent
@@ -18,7 +22,8 @@ public class DataTimeCard {
     @NotNull
     double hours;
 
-    public TimeCard toTimeCard() {
-        return new TimeCard(date, hours);
+    @Override
+    public void execute(OutPersistence outPersistence) throws Exception {
+        outPersistence.saveTimeCard(id, new TimeCard(date, hours));
     }
 }

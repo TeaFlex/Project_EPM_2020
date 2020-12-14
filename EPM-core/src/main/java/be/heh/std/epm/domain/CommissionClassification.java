@@ -1,14 +1,18 @@
 package be.heh.std.epm.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Value;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
+@Value
 public class CommissionClassification extends SalariedClassification {
 
-    @Getter
+
     private List<Receipt>receipts;
-    @Getter
     private double commissionRate;
 
     public CommissionClassification(double salary, double commissionRate) {
