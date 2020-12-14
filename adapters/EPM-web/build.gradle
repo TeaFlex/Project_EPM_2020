@@ -30,3 +30,8 @@ application {
     // Define the main class for the application.
     mainClassName = 'be.heh.std.epm.web.WebApp'
 }
+
+jar {
+    archiveBaseName = 'epm-api-2020'
+    archiveVersion =  '0.1.0'
+}
