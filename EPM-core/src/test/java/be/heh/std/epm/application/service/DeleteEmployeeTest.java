@@ -1,12 +1,11 @@
 package be.heh.std.epm.application.service;
 
-import be.heh.std.epm.application.test_adapter.ListPersistence;
 import be.heh.std.epm.application.port.out.OutPersistence;
+import be.heh.std.epm.application.test_adapter.ListPersistence;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 public class DeleteEmployeeTest {
 

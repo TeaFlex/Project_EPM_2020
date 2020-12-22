@@ -2,7 +2,6 @@ package be.heh.std.epm.persistence.access;
 
 import be.heh.std.epm.domain.*;
 
-import javax.swing.plaf.nimbus.State;
 import java.io.File;
 import java.sql.Date;
 import java.sql.PreparedStatement;
