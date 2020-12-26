@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS Employees(
     paymentClassification VARCHAR(45) NOT NULL,
     paymentSchedule VARCHAR(45) NOT NULL,
     paymentMethod VARCHAR(45) NOT NULL,
+    CHECK (empID>=0),
 
     CONSTRAINT pk_EmpID PRIMARY KEY(EmpID)
 );
