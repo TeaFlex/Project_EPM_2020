@@ -5,26 +5,34 @@ import be.heh.std.epm.application.port.out.OutPersistence;
 import be.heh.std.epm.domain.PayCheck;
 import be.heh.std.epm.persistence.access.H2Persistence;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 public class EmployeeController {
 
     private OutPersistence db;
+    private Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
     public EmployeeController() {
         db = new H2Persistence("file:./h2DBs/mydb", "user", "123");
     }
 
     private ResponseEntity<String> executeWriteOperation(WriteOperation writeOperation) {
+        String current_operation = writeOperation.getClass().getSimpleName();
         try {
+            logger.info("Operation incoming: {}.", current_operation);
             writeOperation.execute(db);
         } catch (Exception e) {
+            logger.error("An error occured during an \"{}\" operation: {}",current_operation, e.getMessage());
             return new ErrorResponseEntity(e.getMessage());
         }
+        logger.info("Operation {} successful !", current_operation);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
