@@ -6,15 +6,21 @@
         </encoder>
     </appender>
 
-    <appender name = "FILE" class = "ch.qos.logback.core.FileAppender">
-        <File>./logs/epm_logs.log</File>
+    <appender name = "FILE" class = "ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/epm_logs.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1MB</maxFileSize> <!-- taille limite des fichiers à 1MB -->
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>5</maxHistory> <!-- limite à 5 jours -->
+        </rollingPolicy>
         <encoder>
             <pattern>[%d{yyyy-MM-dd' 'HH:mm:ss.sss' '}][%-5p][%C][%t][%L]: %m%n</pattern>
         </encoder>
     </appender>
 
-    <root level = "INFO">
-        <appender-ref ref = "FILE"/>
-        <appender-ref ref = "STDOUT"/>
-    </root>
-</configuration>
+        <root level = "INFO">
+            <appender-ref ref = "FILE"/>
+            <appender-ref ref = "STDOUT"/>
+        </root>
+    </configuration>
