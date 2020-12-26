@@ -199,11 +199,11 @@ public class H2Persistence extends SQLikePersistence {
 
         String query = "UPDATE Employees SET paymentClassification = 'CommissionClassification' WHERE empid = " + id;
         Statement statement = getConnection().createStatement();
-        statement.executeQuery(query);
+        statement.executeUpdate(query);
 
         query = "UPDATE Employees SET paymentSchedule = 'BiweeklyPaymentSchedule' WHERE empid = " + id;
         statement = getConnection().createStatement();
-        statement.executeQuery(query);
+        statement.executeUpdate(query);
 
         query = "INSERT INTO CommissionClassification VALUES (?, ?, ?)";
         PreparedStatement preparedStatement = getConnection().prepareStatement(query);
@@ -221,11 +221,11 @@ public class H2Persistence extends SQLikePersistence {
 
         String query = "UPDATE Employees SET paymentClassification = 'HourlyClassification' WHERE empid = " + id;
         Statement statement = getConnection().createStatement();
-        statement.executeQuery(query);
+        statement.executeUpdate(query);
 
         query = "UPDATE Employees SET paymentSchedule = 'WeeklyPaymentSchedule' WHERE empid = " + id;
         statement = getConnection().createStatement();
-        statement.executeQuery(query);
+        statement.executeUpdate(query);
 
         query = "INSERT INTO HourlyClassification VALUES (?, ?)";
         PreparedStatement preparedStatement = getConnection().prepareStatement(query);
@@ -242,11 +242,11 @@ public class H2Persistence extends SQLikePersistence {
 
         String query = "UPDATE Employees SET paymentClassification = 'SalariedClassification' WHERE empid = " + id;
         Statement statement = getConnection().createStatement();
-        statement.executeQuery(query);
+        statement.executeUpdate(query);
 
         query = "UPDATE Employees SET paymentSchedule = 'MonthlyPaymentSchedule' WHERE empid = " + id;
         statement = getConnection().createStatement();
-        statement.executeQuery(query);
+        statement.executeUpdate(query);
 
         query = "INSERT INTO SalariedClassification VALUES (?, ?)";
         PreparedStatement preparedStatement = getConnection().prepareStatement(query);
