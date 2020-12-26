@@ -36,7 +36,7 @@ public class EmployeeController {
             logger.error("An error occured in the database: {}", e.getMessage());
             return new ErrorResponseEntity("Oops, an error occured in the database. The request has been rejected.");
         } catch (Exception e) {
-            logger.error("An error occured during {} operation: {}",sub_message, e.getMessage());
+            logger.error("An error occured during an operation ({}): {}",sub_message, e.getMessage());
             return new ErrorResponseEntity(e.getMessage());
         }
         logger.info("Operation {} successful !", sub_message);
