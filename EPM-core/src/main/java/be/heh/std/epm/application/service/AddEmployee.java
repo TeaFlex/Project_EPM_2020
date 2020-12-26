@@ -1,7 +1,6 @@
 package be.heh.std.epm.application.service;
 
 import be.heh.std.epm.domain.DirectDepositMethod;
-import be.heh.std.epm.domain.Employee;
 import be.heh.std.epm.domain.MailMethod;
 import be.heh.std.epm.domain.PaymentMethod;
 import lombok.Data;
@@ -14,7 +13,7 @@ import java.util.Objects;
 
 @Data
 @ValidPaymentMethod
-public abstract class AddEmployee implements Operation {
+public abstract class AddEmployee implements WriteOperation {
 
     @NotNull
     int id;

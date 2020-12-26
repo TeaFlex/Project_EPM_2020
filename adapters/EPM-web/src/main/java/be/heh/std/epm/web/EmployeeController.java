@@ -2,7 +2,9 @@ package be.heh.std.epm.web;
 
 import be.heh.std.epm.application.service.*;
 import be.heh.std.epm.application.port.out.OutPersistence;
+import be.heh.std.epm.domain.PayCheck;
 import be.heh.std.epm.persistence.access.H2Persistence;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,9 @@ public class EmployeeController {
         db = new H2Persistence("file:./h2DBs/mydb", "user", "123");
     }
 
-    private ResponseEntity<String> executeOperation(Operation operation) {
+    private ResponseEntity<String> executeWriteOperation(WriteOperation writeOperation) {
         try {
-            operation.execute(db);
+            writeOperation.execute(db);
         } catch (Exception e) {
             return new ErrorResponseEntity(e.getMessage());
         }
@@ -27,38 +29,50 @@ public class EmployeeController {
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PostMapping(value = "/employee/commissioned", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/employee/commissioned", consumes =  MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> addCommissionedEmployee(@RequestBody AddCommissionEmployee addCommissionEmployee) {
-        return executeOperation(addCommissionEmployee);
+        return executeWriteOperation(addCommissionEmployee);
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PostMapping(value = "/employee/hourly", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/employee/hourly", consumes =  MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> addHourlyEmployee(@RequestBody AddHourlyEmployee addHourlyEmployee) {
-        return executeOperation(addHourlyEmployee);
+        return executeWriteOperation(addHourlyEmployee);
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PostMapping(value = "/employee/salaried", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/employee/salaried", consumes =  MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> addSalariedEmployee(@RequestBody AddSalariedEmployee addSalariedEmployee) {
-        return executeOperation(addSalariedEmployee);
+        return executeWriteOperation(addSalariedEmployee);
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @DeleteMapping(value = "/employee", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/employee", consumes =  MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> deleteEmployee(@RequestBody DeleteEmployee deleteEmployee) {
-        return executeOperation(deleteEmployee);
+        return executeWriteOperation(deleteEmployee);
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(value = "/timecard", consumes =  MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> postTimeCard(@RequestBody PostTimeCard postTimeCard) {
-        return executeOperation(postTimeCard);
+        return executeWriteOperation(postTimeCard);
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(value = "/salesreceipt", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> postSalesReceipt(@RequestBody PostReceipt postReceipt) {
-        return executeOperation(postReceipt);
+        return executeWriteOperation(postReceipt);
+    }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PostMapping(value = "/payday", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<String> payday(@RequestBody PayDay payDay) {
+        try {
+            PayCheck payCheck = payDay.payday(db);
+            ObjectMapper objectMapper = new ObjectMapper();
+            return ResponseEntity.status(HttpStatus.OK).body(objectMapper.writeValueAsString(payCheck));
+        } catch (Exception e) {
+            return new ErrorResponseEntity(e.getMessage());
+        }
     }
 }

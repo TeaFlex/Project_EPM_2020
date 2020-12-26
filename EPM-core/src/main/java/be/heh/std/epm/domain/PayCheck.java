@@ -1,5 +1,6 @@
 package be.heh.std.epm.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.Map;
 
 public class PayCheck {
 
+    @JsonSerialize(using = LocalDateSerializer.class)
     @Getter
     private LocalDate date;
     @Getter @Setter

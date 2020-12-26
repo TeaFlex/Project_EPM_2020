@@ -1,4 +1,4 @@
-package be.heh.std.epm.application.service;
+package be.heh.std.epm.domain;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

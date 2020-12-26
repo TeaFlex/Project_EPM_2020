@@ -1,4 +1,4 @@
-package be.heh.std.epm.application.service;
+package be.heh.std.epm.domain;
 
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;

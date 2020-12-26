@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class DeleteEmployee implements Operation {
+public class DeleteEmployee implements WriteOperation {
 
     @NotNull
     int id;
