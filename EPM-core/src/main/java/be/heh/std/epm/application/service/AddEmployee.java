@@ -5,17 +5,14 @@ import be.heh.std.epm.domain.MailMethod;
 import be.heh.std.epm.domain.PaymentMethod;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.util.Objects;
 
 @Data
 @ValidPaymentMethod
 public abstract class AddEmployee implements WriteOperation {
 
-    @NotNull
+    @NotNull @Positive
     int id;
     @NotEmpty
     String name;

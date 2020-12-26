@@ -10,18 +10,19 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 @Data
 public class PostTimeCard implements WriteOperation {
 
-    @NotNull
+    @NotNull @Positive
     int id;
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @NotNull @PastOrPresent
     LocalDate date;
-    @NotNull
+    @NotNull @Positive
     double hours;
 
     @Override

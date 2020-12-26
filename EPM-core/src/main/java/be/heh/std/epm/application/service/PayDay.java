@@ -6,12 +6,13 @@ import be.heh.std.epm.domain.PayCheck;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 @Data
 public class PayDay {
 
-    @NotNull
+    @NotNull @Positive
     int id;
 
     public PayCheck payday(OutPersistence outPersistence) throws Exception {

@@ -5,12 +5,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UpdateToSalaried extends UpdateEmployee {
 
-    @NotNull
+    @NotNull @Positive
     double salary;
 
     @Override

@@ -8,12 +8,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class AddHourlyEmployee extends AddEmployee {
 
-    @NotNull
+    @NotNull @Positive
     double rate;
 
     @Override
