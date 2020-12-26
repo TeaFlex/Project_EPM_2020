@@ -197,8 +197,12 @@ public class H2Persistence extends SQLikePersistence {
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
         deletePaymentClassification(id);
 
-        String query = "UPDATE Employees SET paymentClassification = 'Commission' WHERE empid = " + id;
+        String query = "UPDATE Employees SET paymentClassification = 'CommissionClassification' WHERE empid = " + id;
         Statement statement = getConnection().createStatement();
+        statement.executeQuery(query);
+
+        query = "UPDATE Employees SET paymentSchedule = 'BiweeklyPaymentSchedule' WHERE empid = " + id;
+        statement = getConnection().createStatement();
         statement.executeQuery(query);
 
         query = "INSERT INTO CommissionClassification VALUES (?, ?, ?)";
@@ -215,8 +219,12 @@ public class H2Persistence extends SQLikePersistence {
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
         deletePaymentClassification(id);
 
-        String query = "UPDATE Employees SET paymentClassification = 'Hourly' WHERE empid = " + id;
+        String query = "UPDATE Employees SET paymentClassification = 'HourlyClassification' WHERE empid = " + id;
         Statement statement = getConnection().createStatement();
+        statement.executeQuery(query);
+
+        query = "UPDATE Employees SET paymentSchedule = 'WeeklyPaymentSchedule' WHERE empid = " + id;
+        statement = getConnection().createStatement();
         statement.executeQuery(query);
 
         query = "INSERT INTO HourlyClassification VALUES (?, ?)";
@@ -232,8 +240,12 @@ public class H2Persistence extends SQLikePersistence {
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
         deletePaymentClassification(id);
 
-        String query = "UPDATE Employees SET paymentClassification = 'Salaried' WHERE empid = " + id;
+        String query = "UPDATE Employees SET paymentClassification = 'SalariedClassification' WHERE empid = " + id;
         Statement statement = getConnection().createStatement();
+        statement.executeQuery(query);
+
+        query = "UPDATE Employees SET paymentSchedule = 'MonthlyPaymentSchedule' WHERE empid = " + id;
+        statement = getConnection().createStatement();
         statement.executeQuery(query);
 
         query = "INSERT INTO SalariedClassification VALUES (?, ?)";
@@ -353,7 +365,7 @@ public class H2Persistence extends SQLikePersistence {
         String type = resultSet.getString(1);
         statement = null;
 
-        deletePaymentSchedule(id);
+        //deletePaymentSchedule(id);
 
         query = String.format("Delete from %s where empid = ?;", type);
         PreparedStatement prep = getConnection().prepareStatement(query);
