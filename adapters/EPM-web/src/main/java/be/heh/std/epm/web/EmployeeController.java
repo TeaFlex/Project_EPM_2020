@@ -28,18 +28,18 @@ public class EmployeeController {
 
     private ResponseEntity<String> executeWriteOperation(WriteOperation writeOperation, HttpServletRequest req) {
         String current_operation = writeOperation.getClass().getSimpleName();
-        String source_ip = req.getRemoteAddr();
+        String sub_message = String.format("%s from [%s]",current_operation, req.getRemoteAddr());
         try {
-            logger.info("Operation incoming from [{}]: {}.", source_ip, current_operation);
+            logger.info("Operation incoming: {}.", sub_message);
             writeOperation.execute(db);
         } catch (SQLException e) {
             logger.error("An error occured in the database: {}", e.getMessage());
             return new ErrorResponseEntity("Oops, an error occured in the database. The request has been rejected.");
         } catch (Exception e) {
-            logger.error("An error occured during an \"{}\" operation: {}",current_operation, e.getMessage());
+            logger.error("An error occured during {} operation: {}",sub_message, e.getMessage());
             return new ErrorResponseEntity(e.getMessage());
         }
-        logger.info("Operation {} successful !", current_operation);
+        logger.info("Operation {} successful !", sub_message);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
