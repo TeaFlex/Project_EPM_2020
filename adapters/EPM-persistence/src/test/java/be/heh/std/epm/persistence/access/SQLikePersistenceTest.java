@@ -258,6 +258,4 @@ public class SQLikePersistenceTest {
         Receipt rc  = new Receipt(LocalDate.now(), 111);
         db.saveReceipt(employee.getEmpID(), rc);
     }
-
-    //TODO: à compléter avec le reste des tests.
 }
