@@ -201,9 +201,7 @@ public class H2Persistence extends SQLikePersistence {
         Statement statement = getConnection().createStatement();
         statement.executeUpdate(query);
 
-        query = "UPDATE Employees SET paymentSchedule = 'BiweeklyPaymentSchedule' WHERE empid = " + id;
-        statement = getConnection().createStatement();
-        statement.executeUpdate(query);
+        replacePaymentSchedule(id, BiweeklyPaymentSchedule.class);
 
         query = "INSERT INTO CommissionClassification VALUES (?, ?, ?)";
         PreparedStatement preparedStatement = getConnection().prepareStatement(query);
@@ -223,9 +221,7 @@ public class H2Persistence extends SQLikePersistence {
         Statement statement = getConnection().createStatement();
         statement.executeUpdate(query);
 
-        query = "UPDATE Employees SET paymentSchedule = 'WeeklyPaymentSchedule' WHERE empid = " + id;
-        statement = getConnection().createStatement();
-        statement.executeUpdate(query);
+        replacePaymentSchedule(id, WeeklyPaymentSchedule.class);
 
         query = "INSERT INTO HourlyClassification VALUES (?, ?)";
         PreparedStatement preparedStatement = getConnection().prepareStatement(query);
@@ -244,9 +240,7 @@ public class H2Persistence extends SQLikePersistence {
         Statement statement = getConnection().createStatement();
         statement.executeUpdate(query);
 
-        query = "UPDATE Employees SET paymentSchedule = 'MonthlyPaymentSchedule' WHERE empid = " + id;
-        statement = getConnection().createStatement();
-        statement.executeUpdate(query);
+        replacePaymentSchedule(id, MonthlyPaymentSchedule.class);
 
         query = "INSERT INTO SalariedClassification VALUES (?, ?)";
         PreparedStatement preparedStatement = getConnection().prepareStatement(query);
@@ -452,5 +446,12 @@ public class H2Persistence extends SQLikePersistence {
         }
         statement = null;
         return response;
+    }
+
+    private void replacePaymentSchedule(int id, Class newSchedule) throws Exception {
+        String query = String.format("UPDATE Employees SET paymentSchedule = '%s' WHERE empid = %d;",
+                newSchedule.getSimpleName(), id);
+        Statement statement = getConnection().createStatement();
+        statement.executeUpdate(query);
     }
 }
