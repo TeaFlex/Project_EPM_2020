@@ -34,7 +34,8 @@ public class EmployeeController {
             writeOperation.execute(db);
         } catch (SQLException e) {
             logger.error("An error occured in the database: {}", e.getMessage());
-            return new ErrorResponseEntity("Oops, an error occured in the database. The request has been rejected.");
+            return new ErrorResponseEntity("Oops, an error occurred in the database. " +
+                    "The request may be incorrect, please verify and try again.");
         } catch (Exception e) {
             logger.error("An error occured during an operation ({}): {}",sub_message, e.getMessage());
             return new ErrorResponseEntity(e.getMessage());
