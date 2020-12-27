@@ -94,8 +94,8 @@ public class H2Persistence extends SQLikePersistence {
                     ((DirectDepositMethod)emp.getPaymentMethod()).getBank(),
                     ((DirectDepositMethod)emp.getPaymentMethod()).getIban()
             };
-            prep.setString(2, infos[0]);
-            prep.setString(3, infos[1]);
+            prep.setString(2, infos[1]);
+            prep.setString(3, infos[0]);
         } else if(method.equals("MailMethod")) {
             query += "email) VALUES (?, ?);";
             prep = getConnection().prepareStatement(query);
@@ -260,6 +260,17 @@ public class H2Persistence extends SQLikePersistence {
         if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
         deletePaymentMethod(id);
+
+        String query = "UPDATE Employees SET paymentMethod = 'DirectDepositMethod' WHERE empid = " + id;
+        Statement statement = getConnection().createStatement();
+        statement.executeUpdate(query);
+
+        query = "INSERT INTO DirectDepositMethod VALUES (?, ?, ?)";
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setInt(1, id);
+        preparedStatement.setString(2, iban);
+        preparedStatement.setString(3, bank);
+        preparedStatement.executeUpdate();
     }
 
     @Override
@@ -267,6 +278,16 @@ public class H2Persistence extends SQLikePersistence {
         if (!dataExists(id))
             throw new Exception(String.format("This employee (ID: %d) does not exist.", id));
         deletePaymentMethod(id);
+
+        String query = "UPDATE Employees SET paymentMethod = 'MailMethod' WHERE empid = " + id;
+        Statement statement = getConnection().createStatement();
+        statement.executeUpdate(query);
+
+        query = "INSERT INTO MailMethod VALUES (?, ?)";
+        PreparedStatement preparedStatement = getConnection().prepareStatement(query);
+        preparedStatement.setInt(1, id);
+        preparedStatement.setString(2, email);
+        preparedStatement.executeUpdate();
     }
 
     @Override
@@ -333,8 +354,8 @@ public class H2Persistence extends SQLikePersistence {
                 paymentMethod = new MailMethod(rs.getString("email"));
                 break;
             case "DirectDeposit":
-                paymentMethod = new DirectDepositMethod(rs.getString("iban"),
-                        rs.getString("bank"));
+                paymentMethod = new DirectDepositMethod(rs.getString("bank"),
+                        rs.getString("iban"));
                 break;
         }
 

@@ -24,6 +24,7 @@ public class SQLikePersistenceTest {
         employee = new Employee(1, "Link", "Hyrule");
         setBasicInfos();
         setBankMethod();
+        //Note: si l'on ne modifie pas l'employé test, celui-ci sera automatiquement Salaried avec un DirectDepositMethod.
     }
 
     public void setBankMethod() {
@@ -49,7 +50,7 @@ public class SQLikePersistenceTest {
 
     @Test(expected = Exception.class)
     public void badSaveEmployee() throws Exception {
-        //Double ajout d'employé.
+        //Double ajout d'un même employé.
         db.saveEmployee(employee);
         db.saveEmployee(employee);
     }
@@ -91,6 +92,89 @@ public class SQLikePersistenceTest {
         Employee dbEmployee = db.getData(employee.getEmpID());
         assertNotSame(employee.getName(), dbEmployee.getName());
         assertEquals(dbEmployee.getName(), "Squalala");
+    }
+
+    @Test
+    public void updateToSalariedEmployee() throws Exception {
+        //Ajout d'un employé non-Salaried
+        employee.setPaymentClassification(new HourlyClassification(123));
+        employee.setPaymentSchedule(new WeeklyPaymentSchedule());
+        db.saveEmployee(employee);
+
+        //Passage vers la classification Salaried
+        db.updateToSalaried(employee.getEmpID(), 3000);
+
+        //Vérification du contenu de la DB
+        Employee dbEmployee = db.getData(employee.getEmpID());
+        assertTrue(dbEmployee.getPaymentClassification() instanceof SalariedClassification);
+        assertEquals(3000, dbEmployee.getPaymentClassification().getSalary(), 0);
+        assertTrue(dbEmployee.getPaymentSchedule() instanceof MonthlyPaymentSchedule);
+    }
+
+    @Test
+    public void updateToHourlyEmployee() throws Exception {
+        //Ajout d'un employé non-Hourly
+        employee.setPaymentClassification(new CommissionClassification(1000, 0.2));
+        employee.setPaymentSchedule(new BiweeklyPaymentSchedule());
+        db.saveEmployee(employee);
+
+        //Passage vers la classification Hourly
+        db.updateToHourly(employee.getEmpID(), 250);
+
+        //Vérification du contenu de la DB
+        Employee dbEmployee = db.getData(employee.getEmpID());
+        assertTrue(dbEmployee.getPaymentClassification() instanceof HourlyClassification);
+        assertEquals(250, dbEmployee.getPaymentClassification().getSalary(), 0);
+        assertTrue(dbEmployee.getPaymentSchedule() instanceof WeeklyPaymentSchedule);
+    }
+
+    @Test
+    public void updateToCommissionnedEmployee() throws Exception {
+        //Ajout d'un employé non-Salaried
+        employee.setPaymentClassification(new SalariedClassification(1200));
+        employee.setPaymentSchedule(new MonthlyPaymentSchedule());
+        db.saveEmployee(employee);
+
+        //Passage vers le type Salaried
+        db.updateToCommissioned(employee.getEmpID(), 2000, 0.6);
+
+        //Vérification du contenu de la DB
+        Employee dbEmployee = db.getData(employee.getEmpID());
+        assertTrue(dbEmployee.getPaymentClassification() instanceof CommissionClassification);
+        assertEquals(2000, dbEmployee.getPaymentClassification().getSalary(), 0);
+        assertEquals(0.6, ((CommissionClassification)dbEmployee.getPaymentClassification()).getCommissionRate(), 0);
+        assertTrue(dbEmployee.getPaymentSchedule() instanceof BiweeklyPaymentSchedule);
+    }
+
+    @Test
+    public void updateToDirectDeposit() throws Exception {
+        //Ajout d'un employé avec une méthode de payement par mail.
+        setMailMethod();
+        db.saveEmployee(employee);
+
+        //Passage vers le dépôt direct
+        db.updateToDirectDepositMethod(employee.getEmpID(), "RupeeBank", "HY123456789");
+
+        //Vérification du contenu de la DB
+        Employee dbEmployee = db.getData(employee.getEmpID());
+        assertTrue(dbEmployee.getPaymentMethod() instanceof DirectDepositMethod);
+        assertSame("RupeeBank", ((DirectDepositMethod)dbEmployee.getPaymentMethod()).getBank());
+        assertSame("HY123456789", ((DirectDepositMethod)dbEmployee.getPaymentMethod()).getIban());
+    }
+
+    @Test
+    public void updateToMail() throws Exception {
+        //Ajout d'un employé avec une méthode de payement directe.
+        setBankMethod();
+        db.saveEmployee(employee);
+
+        //Passage vers le mail
+        db.updateToMailMethod(employee.getEmpID(), "Link@hyrule.com");
+
+        //Vérification du contenu de la DB
+        Employee dbEmployee = db.getData(employee.getEmpID());
+        assertTrue(dbEmployee.getPaymentMethod() instanceof MailMethod);
+        assertSame("Link@hyrule.com", ((MailMethod)dbEmployee.getPaymentMethod()).getEmail());
     }
 
     @Test
