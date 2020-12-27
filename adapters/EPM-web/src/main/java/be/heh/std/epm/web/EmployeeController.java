@@ -4,6 +4,7 @@ import be.heh.std.epm.application.service.*;
 import be.heh.std.epm.application.port.out.OutPersistence;
 import be.heh.std.epm.domain.PayCheck;
 import be.heh.std.epm.persistence.access.H2Persistence;
+import be.heh.std.epm.persistence.access.PostGreSQLPersistence;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public class EmployeeController {
     private Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
     public EmployeeController() {
+        //db = new PostGreSQLPersistence("127.0.0.1:5432/epm_db", "user", "123");
         db = new H2Persistence("file:./h2DBs/mydb", "user", "123");
     }
 
