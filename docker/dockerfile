@@ -2,6 +2,5 @@ FROM postgres:latest
 LABEL name = "Database_EPM_2020"
 ENV POSTGRES_PASSWORD "123"
 ENV POSTGRES_USER "user"
-ENV POSTGRES_DB "epm"
-ADD "./schema.sql" "/usr/sqlscripts"
-ENTRYPOINT [ "psql epm user -f /usr/sqlscripts/schema.sql" ]
+ENV POSTGRES_DB "epm_db"
+ADD "./docker-schema.sql" "/docker-entrypoint-initdb.d/"

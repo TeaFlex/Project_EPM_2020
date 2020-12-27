@@ -1,11 +1,12 @@
 
 CREATE TABLE IF NOT EXISTS Employees(
-    empID INTEGER(5) AUTO_INCREMENT,
+    empID SERIAL,
     name VARCHAR(45) NOT NULL,
     address VARCHAR(45) NOT NULL,
     paymentClassification VARCHAR(45) NOT NULL,
     paymentSchedule VARCHAR(45) NOT NULL,
     paymentMethod VARCHAR(45) NOT NULL,
+    CHECK (empID>=0),
 
     CONSTRAINT pk_EmpID PRIMARY KEY(EmpID)
 );
@@ -13,7 +14,7 @@ CREATE TABLE IF NOT EXISTS Employees(
 
 CREATE TABLE IF NOT EXISTS SalariedClassification(
     empID int,
-    salary DOUBLE,
+    salary decimal,
 
     PRIMARY KEY(EmpID),
     FOREIGN KEY(EmpID) REFERENCES Employees(EmpID) ON DELETE CASCADE
@@ -21,8 +22,8 @@ CREATE TABLE IF NOT EXISTS SalariedClassification(
 
 CREATE TABLE IF NOT EXISTS CommissionClassification(
     empID int,
-    salary DOUBLE,
-    rate DOUBLE,
+    salary decimal,
+    rate decimal,
 
     PRIMARY KEY(EmpID),
     FOREIGN KEY(EmpID) REFERENCES Employees(EmpID) ON DELETE CASCADE
@@ -30,7 +31,7 @@ CREATE TABLE IF NOT EXISTS CommissionClassification(
 
 CREATE TABLE IF NOT EXISTS HourlyClassification(
     empID int,
-    salary DOUBLE,
+    salary decimal,
 
     PRIMARY KEY(EmpID),
     FOREIGN KEY(EmpID) REFERENCES Employees(EmpID) ON DELETE CASCADE
@@ -39,7 +40,7 @@ CREATE TABLE IF NOT EXISTS HourlyClassification(
 CREATE TABLE IF NOT EXISTS TimeCards(
     empID int,
     tDate DATE ,
-    hours DOUBLE,
+    hours decimal,
 
     PRIMARY KEY(EmpID, tDate),
     FOREIGN KEY(EmpID) REFERENCES HourlyClassification(EmpID) ON DELETE CASCADE
@@ -48,7 +49,7 @@ CREATE TABLE IF NOT EXISTS TimeCards(
 CREATE TABLE IF NOT EXISTS Receipts(
     empID int,
     tDate DATE ,
-    price DOUBLE,
+    price decimal,
 
     PRIMARY KEY(EmpID, tDate),
     FOREIGN KEY(EmpID) REFERENCES CommissionClassification(EmpID) ON DELETE CASCADE
