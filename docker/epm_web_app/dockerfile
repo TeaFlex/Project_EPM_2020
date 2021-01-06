@@ -1,0 +1,10 @@
+FROM openjdk:latest
+LABEL author Teaflex
+RUN mkdir /epm_proj
+RUN mkdir /epm_proj/logs
+COPY ../../adapters/EPM-web/build/libs/EPM-web-1.0-SNAPSHOT.jar /epm_proj
+VOLUME [ "/epm_proj/h2DBs" ]
+VOLUME [ "/epm_proj/logs" ]
+WORKDIR /epm_proj
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "./EPM-web-1.0-SNAPSHOT.jar"]
